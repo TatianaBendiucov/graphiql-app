@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Main from "@/components/Main";
+import ClientThemeProvider from "@/utils/ClientThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +18,38 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ClientThemeProvider>
+          <Main>{children}</Main>
+        </ClientThemeProvider>
+      </body>
     </html>
   );
 }
+
+// import { ReactNode } from "react";
+// import { ThemeProvider } from "../context/ThemeContext";
+// import ErrorBoundary from "../components/ErrorBoundary";
+// import "../index.css";
+// import { ReduxProvider } from "src/store/reduxProvider";
+
+// const Layout = ({ children }: { children: ReactNode }) => {
+//   return (
+//     <html>
+//       <body>
+//         <ThemeProvider>
+//           <ReduxProvider>
+//             <ErrorBoundary
+//               fallback={<p>ErrorBoundary: Something went wrong.</p>}
+//             >
+//               {children}
+//             </ErrorBoundary>
+//           </ReduxProvider>
+//         </ThemeProvider>
+//       </body>
+//     </html>
+//   );
+// };
+
+// export default Layout;
+

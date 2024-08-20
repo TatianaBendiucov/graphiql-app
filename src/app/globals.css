@@ -3,17 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+  --foreground-rgb: 33, 37, 41; /* Darker text color for better readability */
+  --background-start-rgb: 248, 249, 250; /* Lighter start background color */
+  --background-end-rgb: 255, 255, 255; /* White end background color */
 }
 
 body {
@@ -30,4 +22,13 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+.editor {
+  height: 400px;
+  overflow: auto;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f5f5f5;
 }
