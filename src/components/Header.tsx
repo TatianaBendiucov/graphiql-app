@@ -2,13 +2,12 @@
 
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
-import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import useAuth from '@/hooks/useAuth';
+import ButtonBase from './Button';
 
 const Header: React.FC = () => {
-  const router = useRouter();
   const { currentUser } = useAuth();
   console.log(currentUser);
 
@@ -20,21 +19,24 @@ const Header: React.FC = () => {
     <AppBar position="sticky">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          <Button color="inherit" onClick={() => router.push('/')}>
-            Home
-          </Button>
+          <ButtonBase 
+            href={'/'}
+          >Home</ButtonBase>
         </Typography>
         {!currentUser ?
           <Box>
-            <Button color="inherit" onClick={() => router.push('/signup')}>
-              Sign Up
-            </Button>
-            <Button color="inherit" onClick={() => router.push('/signin')}>
-              Sign In
-            </Button>
+            <ButtonBase 
+              href={'/signup'}
+            >Sign Up</ButtonBase>
+            <ButtonBase 
+              href={'/signin'}
+            >Sign In</ButtonBase>
           </Box>
           : <Box>
-            <Button color="inherit" onClick={handleSignOut}>Log Out </Button>
+            <ButtonBase 
+              href={'/'}
+              handleClick={handleSignOut}
+            >Log Out</ButtonBase>
           </Box>}
       </Toolbar>
     </AppBar>
