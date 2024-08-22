@@ -4,7 +4,7 @@ import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField, Button, Box, Typography, Container } from '@mui/material';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import { schema } from '@/utils/validations/SignInSchema';
 import { useNavigate } from 'react-router-dom';
