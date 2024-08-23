@@ -5,17 +5,21 @@ import CodeMirror from '@uiw/react-codemirror';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { graphql } from 'cm6-graphql';
 import { json } from '@codemirror/lang-json'; // Import the JSON language
-import { Box, Button, Grid, Paper, TextField, Typography, IconButton } from '@mui/material';
+import { Box, Button, Grid, Paper, TextField, Typography, IconButton, Icon } from '@mui/material';
 import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material';
-import { encodeBase64 } from '@/utils/utils';
+import { buildGraphQLUrl, encodeBase64 } from '@/utils/utils';
 import { schema } from '@/utils/validations/GraphiQLSchema';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import * as Yup from 'yup';
+import {formatSdl} from 'format-graphql';
 
 const GraphQLPlayground = () => {
     const [endpoint, setEndpoint] = useState<string>("");
     const [sdlEndpoint, setSdlEndpoint] = useState<string>(`${endpoint}?sdl`);
     const [query, setQuery] = useState<string>("");
     const [response, setResponse] = useState<string | null>(null);
+    const [responseStatus, setResponseStatus] = useState<number | null>(null);
+    const [sdlResponse, setSdlResponse] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [headers, setHeaders] = useState<{ key: string; value: string }[]>([
         { key: "", value: "" },
@@ -23,7 +27,6 @@ const GraphQLPlayground = () => {
     const [variables, setVariables] = useState<string>("{}");
     const [validationErrors, setValidationErrors] = useState<any>({});
     const editorRef = useRef<any>(null);
-
 
     const validate = async () => {
         try {
@@ -75,24 +78,7 @@ const GraphQLPlayground = () => {
                 .replace(/\\n/g, '')
                 .replace(/\s+/g, ' ');
 
-            const buildUrl = () => {
-                const encodedEndpoint = encodeBase64(endpoint);
-                const encodedBody = encodeBase64(body);
-
-                let url = `http://localhost:3000/GRAPHQL/${encodedEndpoint}/${encodedBody}`;
-
-                const headerParams = headers
-                    .filter(header => header.key && header.value)
-                    .map(header => `${encodeURIComponent(header.key)}=${encodeURIComponent(header.value)}`)
-                    .join('&');
-
-                if (headerParams) {
-                    url += `?${headerParams}`;
-                }
-
-                return url;
-            };
-            const url = buildUrl();
+            const url = buildGraphQLUrl({ endpoint, body, headers });
 
             const res = await fetch(url, {
                 method: "GET",
@@ -105,8 +91,30 @@ const GraphQLPlayground = () => {
                 throw new Error(`HTTP error! status: ${res.status}`);
             }
 
+            const sdlResponse = await fetch(
+                buildGraphQLUrl(
+                    {
+                        endpoint: sdlEndpoint,
+                        body: body,
+                        headers
+                    }
+                ),
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                }
+            );
+
+            if (sdlResponse.ok) {
+                const jsonSdlResponse = await sdlResponse.json()
+                setSdlResponse(JSON.stringify(jsonSdlResponse, null, 2));
+            }
+
             const jsonResponse = await res.json();
             setResponse(JSON.stringify(jsonResponse, null, 2));
+            setResponseStatus(res.status);
         } catch (error: any) {
             setResponse("Error: " + error.message);
         }
@@ -133,8 +141,10 @@ const GraphQLPlayground = () => {
     };
 
     const formatCode = () => {
-        
+        const formatted = formatSdl(query);
+        setQuery(formatted);
     };
+    
     return (
         <Box sx={{ p: 3 }}>
             <Typography variant="h4" gutterBottom>
@@ -209,16 +219,16 @@ const GraphQLPlayground = () => {
                             theme={oneDark}
                             onChange={(value, viewUpdate) => setQuery(value)}
                             extensions={[graphql()]}
-                            ref={editorRef} 
+                            ref={editorRef}
                         />
                         <Typography color="error">{validationErrors.query}</Typography>
                         <Button
                             variant="contained"
-                            color="primary"
+                            color="secondary"
                             onClick={formatCode}
                             sx={{ mt: 1 }}
                         >
-                            Format Query
+                            <AutoFixHighIcon />
                         </Button>
                     </Box>
 
@@ -245,11 +255,24 @@ const GraphQLPlayground = () => {
                     </Button>
                 </Grid>
                 <Grid item xs={12}>
+                    <Typography variant="h6">Response Status</Typography>
+                    <pre>{responseStatus}</pre>
+                </Grid>
+                <Grid item xs={12}>
                     <Typography variant="h6">Response</Typography>
                     <Paper sx={{ p: 2, maxHeight: 300, overflow: "auto" }}>
                         <pre>{response}</pre>
                     </Paper>
                 </Grid>
+                {sdlResponse ?
+                    <Grid item xs={12}>
+                        <Typography variant="h6">SDL Documentation</Typography>
+                        <Paper sx={{ p: 2, maxHeight: 300, overflow: "auto" }}>
+                            <pre>{sdlResponse}</pre>
+                        </Paper>
+                    </Grid>
+                    : ''
+                }
             </Grid>
         </Box>
     );

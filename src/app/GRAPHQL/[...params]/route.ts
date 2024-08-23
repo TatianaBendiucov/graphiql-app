@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request, { params }: { params: { params: string[] } }) {
-  
   const [endpointEncoded, bodyEncoded] = params.params;
 
-  if (!endpointEncoded || !bodyEncoded) {
+  if (!endpointEncoded) {
     return NextResponse.json({ error: "Invalid URL format. Provide both endpoint and body in the URL." }, { status: 400 });
   }
 
   try {
     const endpoint = Buffer.from(endpointEncoded, "base64").toString("utf-8");
+    console.log(endpoint);
     const body = Buffer.from(bodyEncoded, "base64").toString("utf-8");
 
     console.log(body);
