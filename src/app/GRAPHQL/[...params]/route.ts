@@ -1,6 +1,7 @@
+import { Params } from "@/types/routesTypes";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request, { params }: { params: { params: string[] } }) {
+export async function GET(req: Request, { params }: { params: Params }) {
   const [endpointEncoded, bodyEncoded] = params.params;
 
   if (!endpointEncoded) {

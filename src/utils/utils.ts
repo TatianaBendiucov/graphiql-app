@@ -1,3 +1,4 @@
+import { HttpMethod } from "@/types/routesTypes";
 import { headers } from "next/headers";
 
 export const encodeBase64 = (input: string): string => {
@@ -19,6 +20,41 @@ export const buildGraphQLUrl = ({
     const encodedBody = encodeBase64(body);
 
     let url = `http://localhost:3000/GRAPHQL/${encodedEndpoint}/${encodedBody}`;
+
+    if (headers) {
+        const headerParams = headers
+            .filter(header => header.key && header.value)
+            .map(header => `${encodeURIComponent(header.key)}=${encodeURIComponent(header.value)}`)
+            .join('&');
+
+        if (headerParams) {
+            url += `?${headerParams}`;
+        }
+    }
+
+    return url;
+};
+
+
+interface BuildRestfulApiUrlParams {
+    method: HttpMethod,
+    endpoint: string,
+    body: string | null,
+    headers: { key: string; value: string }[] | null
+}
+export const buildRestfulApiUrl = ({
+    method,
+    endpoint,
+    body,
+    headers,
+}: BuildRestfulApiUrlParams): string => {
+    const encodedEndpoint = encodeBase64(endpoint);
+
+    let url = `http://localhost:3000/${method}/${encodedEndpoint}`;
+    if(body) {
+        const encodedBody = encodeBase64(body);
+        url += `/${encodedBody}`;
+    }   
 
     if (headers) {
         const headerParams = headers
