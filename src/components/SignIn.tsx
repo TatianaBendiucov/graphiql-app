@@ -7,7 +7,7 @@ import { TextField, Button, Box, Typography, Container } from '@mui/material';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import { schema } from '@/utils/validations/SignInSchema';
-import { useNavigate } from 'react-router-dom';
+import { useTranslation } from './i18n/client';
 
 interface SignInFormInputs {
   email: string;
@@ -15,6 +15,8 @@ interface SignInFormInputs {
 }
 
 const SignIn: React.FC = () => {
+  const { t } = useTranslation();
+  
   const {
     register,
     handleSubmit,
@@ -32,7 +34,7 @@ const SignIn: React.FC = () => {
       await signInWithEmailAndPassword(auth, data.email, data.password);
       setError(null);
     } catch (error: any) {
-      setError(error.message);
+      setError(error.message.map((err:string) => t(`errors.${err}`)));
       setSuccess(null);
     }
   };
@@ -48,7 +50,7 @@ const SignIn: React.FC = () => {
         }}
       >
         <Typography component="h1" variant="h5">
-          Sign In
+          {t('sign_in')}
         </Typography>
         <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
           <TextField
@@ -56,7 +58,7 @@ const SignIn: React.FC = () => {
             margin="normal"
             fullWidth
             id="email"
-            label="Email Address"
+            label={t('inputs.email')}
             {...register('email')}
             error={!!errors.email}
             helperText={errors.email?.message}
@@ -67,7 +69,7 @@ const SignIn: React.FC = () => {
             variant="outlined"
             margin="normal"
             fullWidth
-            label="Password"
+            label={t('inputs.password')}
             type="password"
             id="password"
             {...register('password')}
@@ -84,7 +86,7 @@ const SignIn: React.FC = () => {
             color="primary"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            {t('sign_in')}
           </Button>
         </Box>
       </Box>

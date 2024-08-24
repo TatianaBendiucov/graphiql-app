@@ -1,0 +1,22 @@
+{
+    "errors": {
+        "json": "Variables must be valid JSON",
+        "url": "Invalid URL format",
+        "email": "Invalid email format",
+        "min": "Must contain min {{min}} characters",
+        "least_one_special_character": "Must contain at least one special character",
+        "least_one_number": "Must contain at least one number",
+        "least_one_letter": "Must contain at least one letter",
+        "required": "This field is required"
+    },
+    "inputs": {
+        "email": "Email Address",
+        "password": "Password"
+    },
+    "home": "Home",
+    "sign_up": "Sign Up",
+    "log_out": "Log Out",
+    "sign_in": "Sign In",
+    "loading": "Loading",
+    "some": "some"
+}

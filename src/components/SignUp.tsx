@@ -7,6 +7,7 @@ import { TextField, Button, Box, Typography, Container } from '@mui/material';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import { schema } from '@/utils/validations/SignUpSchema';
+import { useTranslation } from './i18n/client';
 
 interface SignUpFormInputs {
   email: string;
@@ -14,13 +15,14 @@ interface SignUpFormInputs {
 }
 
 const SignUp: React.FC = () => {
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<SignUpFormInputs>({
     mode: "all",
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema(t)),
   });
 
   const [error, setError] = React.useState<string | null>(null);
@@ -48,7 +50,7 @@ const SignUp: React.FC = () => {
         }}
       >
         <Typography component="h1" variant="h5">
-          Sign Up
+          {t('sign_up')}
         </Typography>
         <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
           <TextField
@@ -56,7 +58,7 @@ const SignUp: React.FC = () => {
             margin="normal"
             fullWidth
             id="email"
-            label="Email Address"
+            label={t('inputs.email')}
             {...register('email')}
             error={!!errors.email}
             helperText={errors.email?.message}
@@ -67,7 +69,7 @@ const SignUp: React.FC = () => {
             variant="outlined"
             margin="normal"
             fullWidth
-            label="Password"
+            label={t('inputs.password')}
             type="password"
             id="password"
             {...register('password')}
@@ -84,7 +86,7 @@ const SignUp: React.FC = () => {
             color="primary"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign Up
+            {t('sign_up')}
           </Button>
         </Box>
       </Box>
