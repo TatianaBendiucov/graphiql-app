@@ -1,6 +1,7 @@
+import { TFunction } from 'i18next';
 import * as yup from 'yup';
 
-export const schema = (t:any) => {
+export const schema = (t:TFunction) => {
     return yup.object().shape({
         email: yup.string()
             .email()

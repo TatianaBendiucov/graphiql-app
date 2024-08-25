@@ -35,7 +35,7 @@ const SignIn: React.FC = () => {
       await signInWithEmailAndPassword(auth, data.email, data.password);
       // setError(null);
       showToast('success', 'Login was syccessifuly');
-    } catch (error: any) {
+    } catch (error) {
       showToast('error', error.message);
       // setError(error.message);
       // setSuccess(null);

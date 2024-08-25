@@ -22,7 +22,7 @@ const Main: React.FC<MainProps> = ({ children }) => {
             email: t('errors.email'),
             min: ({min}) => t('errors.min', {min})
         }
-    })
+    });
 
     if (loading) return <>{t('loading')}...</>;
 
@@ -32,5 +32,5 @@ const Main: React.FC<MainProps> = ({ children }) => {
             <main>{children}</main>
         </>
     );
-}
+};
 export default Main;

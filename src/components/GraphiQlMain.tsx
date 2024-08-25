@@ -5,32 +5,34 @@ import CodeMirror from '@uiw/react-codemirror';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { graphql } from 'cm6-graphql';
 import { json } from '@codemirror/lang-json'; // Import the JSON language
-import { Box, Button, Grid, Paper, TextField, Typography, IconButton, Icon } from '@mui/material';
+import { Box, Button, Grid, Paper, TextField, Typography, IconButton } from '@mui/material';
 import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material';
-import { buildGraphQLUrl, encodeBase64 } from '@/utils/utils';
+import { buildGraphQLUrl } from '@/utils/utils';
 import { schema } from '@/utils/validations/GraphiQLSchema';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import * as Yup from 'yup';
 import {formatSdl} from 'format-graphql';
+import { useTranslation } from './i18n/client';
 
 const GraphQLPlayground = () => {
+    const { t } = useTranslation();
     const [endpoint, setEndpoint] = useState<string>("");
     const [sdlEndpoint, setSdlEndpoint] = useState<string>(`${endpoint}?sdl`);
     const [query, setQuery] = useState<string>("");
     const [response, setResponse] = useState<string | null>(null);
     const [responseStatus, setResponseStatus] = useState<number | null>(null);
     const [sdlResponse, setSdlResponse] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    // const [error, setError] = useState<string | null>(null);
     const [headers, setHeaders] = useState<{ key: string; value: string }[]>([
         { key: "", value: "" },
     ]);
     const [variables, setVariables] = useState<string>("{}");
-    const [validationErrors, setValidationErrors] = useState<any>({});
-    const editorRef = useRef<any>(null);
+    const [validationErrors, setValidationErrors] = useState<object>({});
+    const editorRef = useRef(null);
 
     const validate = async () => {
         try {
-            await schema.validate(
+            await schema(t).validate(
                 {
                     endpoint,
                     sdlEndpoint,
@@ -108,14 +110,14 @@ const GraphQLPlayground = () => {
             );
 
             if (sdlResponse.ok) {
-                const jsonSdlResponse = await sdlResponse.json()
+                const jsonSdlResponse = await sdlResponse.json();
                 setSdlResponse(JSON.stringify(jsonSdlResponse, null, 2));
             }
 
             const jsonResponse = await res.json();
             setResponse(JSON.stringify(jsonResponse, null, 2));
             setResponseStatus(res.status);
-        } catch (error: any) {
+        } catch (error) {
             setResponse("Error: " + error.message);
         }
     };
@@ -217,7 +219,7 @@ const GraphQLPlayground = () => {
                             height="100%"
                             value={query}
                             theme={oneDark}
-                            onChange={(value, viewUpdate) => setQuery(value)}
+                            onChange={(value) => setQuery(value)}
                             extensions={[graphql()]}
                             ref={editorRef}
                         />

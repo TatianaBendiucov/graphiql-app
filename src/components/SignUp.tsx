@@ -31,11 +31,11 @@ const SignUp: React.FC = () => {
 
   const onSubmit: SubmitHandler<SignUpFormInputs> = async (data) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      await createUserWithEmailAndPassword(auth, data.email, data.password);
       showToast('success', 'Login was syccessifuly');
       // setSuccess('User registered successfully!');
       // setError(null);
-    } catch (error: any) {
+    } catch (error) {
       showToast('error', error.message);
       // setError(error.message);
       // setSuccess(null);

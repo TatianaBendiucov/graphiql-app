@@ -4,7 +4,7 @@ import { auth } from '@/utils/firebase';
 
 const useAuth = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<Boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setLoading(true);

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Box } from '@mui/material';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import useAuth from '@/hooks/useAuth';

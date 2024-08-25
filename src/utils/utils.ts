@@ -1,5 +1,4 @@
 import { HttpMethod } from "@/types/routesTypes";
-import { headers } from "next/headers";
 
 export const encodeBase64 = (input: string): string => {
     return Buffer.from(input, "utf-8").toString("base64");

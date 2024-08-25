@@ -27,7 +27,7 @@ export const showToast = (
     info: () => toast.info(content, optionsToApply),
     warning: () => toast.warning(content, optionsToApply),
     default: () => toast(content, optionsToApply),
-  }
+  };
 
   return types[type] ? types[type]() : types['default']();
 };
