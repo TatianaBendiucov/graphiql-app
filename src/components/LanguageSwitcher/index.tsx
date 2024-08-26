@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import React, { useState } from 'react';
 import { cookieName, fallbackLng, languages } from '@/components/i18n/settings';

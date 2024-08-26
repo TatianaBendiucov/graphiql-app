@@ -8,6 +8,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import { schema } from '@/utils/validations/SignUpSchema';
 import { useTranslation } from './i18n/client';
+import { showToast } from './ShowToast';
 
 interface SignUpFormInputs {
   email: string;
@@ -25,17 +26,19 @@ const SignUp: React.FC = () => {
     resolver: yupResolver(schema(t)),
   });
 
-  const [error, setError] = React.useState<string | null>(null);
-  const [success, setSuccess] = React.useState<string | null>(null);
+  // const [error, setError] = React.useState<string | null>(null);
+  // const [success, setSuccess] = React.useState<string | null>(null);
 
   const onSubmit: SubmitHandler<SignUpFormInputs> = async (data) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
-      setSuccess('User registered successfully!');
-      setError(null);
-    } catch (error: any) {
-      setError(error.message);
-      setSuccess(null);
+      await createUserWithEmailAndPassword(auth, data.email, data.password);
+      showToast('success', 'Login was syccessifuly');
+      // setSuccess('User registered successfully!');
+      // setError(null);
+    } catch (error) {
+      showToast('error', error.message);
+      // setError(error.message);
+      // setSuccess(null);
     }
   };
 
@@ -77,8 +80,8 @@ const SignUp: React.FC = () => {
             helperText={errors.password?.message}
             autoComplete="current-password"
           />
-          {error && <Typography color="error">{error}</Typography>}
-          {success && <Typography color="primary">{success}</Typography>}
+          {/* {error && <Typography color="error">{error}</Typography>}
+          {success && <Typography color="primary">{success}</Typography>} */}
           <Button
             type="submit"
             fullWidth

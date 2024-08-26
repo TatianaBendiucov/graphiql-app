@@ -19,7 +19,7 @@ const ButtonBase = ({
     href = '',
 }:ButtonProps) => {
 
-    let props:Props = {};
+    const props:Props = {};
 
     if (href) {
         props.component = NextLink;

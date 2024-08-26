@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { json } from '@codemirror/lang-json';
-import { Box, Button, Grid, Paper, TextField, Typography, IconButton, Icon } from '@mui/material';
+import { Box, Button, Grid, Paper, TextField, Typography, IconButton } from '@mui/material';
 import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material';
 import { buildRestfulApiUrl } from '@/utils/utils';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
@@ -21,13 +21,13 @@ const RestfulApiPlayground = () => {
     const [body, setBody] = useState<string>("");
     const [response, setResponse] = useState<string | null>(null);
     const [responseStatus, setResponseStatus] = useState<number | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    // const [error, setError] = useState<string | null>(null);
     const [headers, setHeaders] = useState<{ key: string; value: string }[]>([
         { key: "", value: "" },
     ]);
     const [variables, setVariables] = useState<string>("{}");
-    const [validationErrors, setValidationErrors] = useState<any>({});
-    const editorRef = useRef<any>(null);
+    const [validationErrors, setValidationErrors] = useState({});
+    const editorRef = useRef(null);
 
     const validate = async () => {
         try {
@@ -101,7 +101,7 @@ const RestfulApiPlayground = () => {
             const jsonResponse = await res.json();
             setResponse(JSON.stringify(jsonResponse, null, 2));
             setResponseStatus(res.status);
-        } catch (error: any) {
+        } catch (error) {
             setResponse("Error: " + error.message);
         }
     };

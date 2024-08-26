@@ -8,6 +8,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import { schema } from '@/utils/validations/SignInSchema';
 import { useTranslation } from './i18n/client';
+import { showToast } from './ShowToast';
 
 interface SignInFormInputs {
   email: string;
@@ -26,16 +27,18 @@ const SignIn: React.FC = () => {
     resolver: yupResolver(schema),
   });
 
-  const [error, setError] = React.useState<string | null>(null);
-  const [success, setSuccess] = React.useState<string | null>(null);
+  // const [error, setError] = React.useState<string | null>(null);
+  // const [success, setSuccess] = React.useState<string | null>(null);
 
   const onSubmit: SubmitHandler<SignInFormInputs> = async (data) => {
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
-      setError(null);
-    } catch (error: any) {
-      setError(error.message.map((err:string) => t(`errors.${err}`)));
-      setSuccess(null);
+      // setError(null);
+      showToast('success', 'Login was syccessifuly');
+    } catch (error) {
+      showToast('error', error.message);
+      // setError(error.message);
+      // setSuccess(null);
     }
   };
 
@@ -77,8 +80,8 @@ const SignIn: React.FC = () => {
             helperText={errors.password?.message}
             autoComplete="current-password"
           />
-          {error && <Typography color="error">{error}</Typography>}
-          {success && <Typography color="primary">{success}</Typography>}
+          {/* {error && <Typography color="error">{error}</Typography>} */}
+          {/* {success && <Typography color="primary">{success}</Typography>} */}
           <Button
             type="submit"
             fullWidth

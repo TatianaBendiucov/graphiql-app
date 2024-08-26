@@ -6,6 +6,7 @@ import ClientThemeProvider from "@/utils/ClientThemeProvider";
 import { dir } from 'i18next';
 import { cookieName, fallbackLng, languages } from '../components/i18n/settings';
 import { getCookie } from "cookies-next";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export async function generateStaticParams() {
-  return languages.map((lng) => ({ lng }))
+  return languages.map((lng) => ({ lng }));
 }
 
 export default async function RootLayout({
@@ -28,9 +29,11 @@ export default async function RootLayout({
   return (
     <html lang={lng} dir={dir(lng)}>
       <body className={inter.className}>
-        <ClientThemeProvider>
-          <Main>{children}</Main>
-        </ClientThemeProvider>
+        <ErrorBoundary>
+          <ClientThemeProvider>
+            <Main>{children}</Main>
+          </ClientThemeProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

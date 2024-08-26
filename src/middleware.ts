@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server'
-import acceptLanguage from 'accept-language'
-import { fallbackLng, languages, cookieName } from '@/components/i18n/settings'
+import { NextRequest, NextResponse } from 'next/server';
+import acceptLanguage from 'accept-language';
+import { fallbackLng, languages, cookieName } from '@/components/i18n/settings';
 
-acceptLanguage.languages(languages)
+acceptLanguage.languages(languages);
 
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|site.webmanifest).*)']
-}
+};
 
 export function middleware(req: NextRequest) {
   let language = fallbackLng;

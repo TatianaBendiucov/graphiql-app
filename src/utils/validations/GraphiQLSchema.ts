@@ -1,6 +1,7 @@
+import { TFunction } from 'i18next';
 import * as Yup from 'yup';
 
-export const schema = (t:any) => {
+export const schema = (t:TFunction) => {
     return Yup.object().shape({
         endpoint: Yup.string().url().required(),
         sdlEndpoint: Yup.string().url(),
@@ -21,4 +22,4 @@ export const schema = (t:any) => {
             })
         ),
     });
-}
+};

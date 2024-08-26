@@ -32,7 +32,7 @@ export async function GET(req: Request, { params }: { params: Params }) {
     const jsonResponse = await response.json();
     console.log(jsonResponse);
     return NextResponse.json(jsonResponse, { status: response.status });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

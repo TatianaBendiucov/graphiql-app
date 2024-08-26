@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const theme = createTheme({
   palette: {
@@ -10,7 +12,12 @@ const theme = createTheme({
 });
 
 const ClientThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+  return (
+    <ThemeProvider theme={theme}>
+      {children}
+      <ToastContainer />
+    </ThemeProvider>
+  );
 };
 
 export default ClientThemeProvider;
