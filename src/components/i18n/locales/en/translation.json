@@ -7,12 +7,23 @@
         "least_one_special_character": "Must contain at least one special character",
         "least_one_number": "Must contain at least one number",
         "least_one_letter": "Must contain at least one letter",
+        "invalidRequestType": "This HTTP method is not available for request",
         "required": "This field is required"
     },
     "inputs": {
         "email": "Email Address",
-        "password": "Password"
+        "password": "Password",
+        "headers": "Headers",
+        "endpoint": "Endpoint (URL)",
+        "body": "Body",
+        "variables_editor": "Variables Editor",
+        "header_key": "Header Key {{index}}",
+        "header_value": "Header Value {{index}}",
+        "send": "Send"
     },
+    "restful_title": "RESTfull client Playground",
+    "response_status": "Response Status",
+    "response": "Response",
     "home": "Home",
     "sign_up": "Sign Up",
     "log_out": "Log Out",

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -17,28 +17,22 @@ interface SignInFormInputs {
 
 const SignIn: React.FC = () => {
   const { t } = useTranslation();
-  
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<SignInFormInputs>({
-    mode: "all",
+    mode: 'all',
     resolver: yupResolver(schema),
   });
-
-  // const [error, setError] = React.useState<string | null>(null);
-  // const [success, setSuccess] = React.useState<string | null>(null);
 
   const onSubmit: SubmitHandler<SignInFormInputs> = async (data) => {
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
-      // setError(null);
       showToast('success', 'Login was syccessifuly');
     } catch (error) {
       showToast('error', error.message);
-      // setError(error.message);
-      // setSuccess(null);
     }
   };
 
@@ -80,8 +74,6 @@ const SignIn: React.FC = () => {
             helperText={errors.password?.message}
             autoComplete="current-password"
           />
-          {/* {error && <Typography color="error">{error}</Typography>} */}
-          {/* {success && <Typography color="primary">{success}</Typography>} */}
           <Button
             type="submit"
             fullWidth
