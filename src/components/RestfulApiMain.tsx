@@ -12,8 +12,10 @@ import * as Yup from 'yup';
 import HttpMethodSelector from '@/components/FormControls/HttpMethodSelector';
 import { HttpMethod } from '@/types/routesTypes';
 import { schema } from '@/utils/validations/RestfulApiSchema';
+import { useTranslation } from './i18n/client';
 
 const RestfulApiPlayground = () => {
+    const { t } = useTranslation();
     const [endpoint, setEndpoint] = useState<string>("");
     const [method, setMethod] = useState<HttpMethod>(HttpMethod.GET);
     const [body, setBody] = useState<string>("");
@@ -29,7 +31,7 @@ const RestfulApiPlayground = () => {
 
     const validate = async () => {
         try {
-            await schema.validate(
+            await schema(t).validate(
                 {
                     endpoint,
                     body,
@@ -56,6 +58,7 @@ const RestfulApiPlayground = () => {
 
     const handleSend = async () => {
         const isValid = await validate();
+        console.log(isValid);
         if (!isValid) return;
 
         try {

@@ -12,8 +12,10 @@ import { schema } from '@/utils/validations/GraphiQLSchema';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import * as Yup from 'yup';
 import {formatSdl} from 'format-graphql';
+import { useTranslation } from './i18n/client';
 
 const GraphQLPlayground = () => {
+    const { t } = useTranslation();
     const [endpoint, setEndpoint] = useState<string>("");
     const [sdlEndpoint, setSdlEndpoint] = useState<string>(`${endpoint}?sdl`);
     const [query, setQuery] = useState<string>("");
@@ -30,7 +32,7 @@ const GraphQLPlayground = () => {
 
     const validate = async () => {
         try {
-            await schema.validate(
+            await schema(t).validate(
                 {
                     endpoint,
                     sdlEndpoint,
