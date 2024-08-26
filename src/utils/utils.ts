@@ -1,70 +1,75 @@
-import { HttpMethod } from "@/types/routesTypes";
+import { HttpMethod } from '@/types/routesTypes';
 
 export const encodeBase64 = (input: string): string => {
-    return Buffer.from(input, "utf-8").toString("base64");
+  return Buffer.from(input, 'utf-8').toString('base64');
 };
 
 interface BuildGraphQLUrlParams {
-    endpoint: string,
-    body: string,
-    headers: { key: string; value: string }[] | null
+  endpoint: string;
+  body: string;
+  headers: { key: string; value: string }[] | null;
 }
 
 export const buildGraphQLUrl = ({
-    endpoint,
-    body,
-    headers,
+  endpoint,
+  body,
+  headers,
 }: BuildGraphQLUrlParams): string => {
-    const encodedEndpoint = encodeBase64(endpoint);
-    const encodedBody = encodeBase64(body);
+  const encodedEndpoint = encodeBase64(endpoint);
+  const encodedBody = encodeBase64(body);
 
-    let url = `http://localhost:3000/GRAPHQL/${encodedEndpoint}/${encodedBody}`;
+  let url = `http://localhost:3000/GRAPHQL/${encodedEndpoint}/${encodedBody}`;
 
-    if (headers) {
-        const headerParams = headers
-            .filter(header => header.key && header.value)
-            .map(header => `${encodeURIComponent(header.key)}=${encodeURIComponent(header.value)}`)
-            .join('&');
+  if (headers) {
+    const headerParams = headers
+      .filter((header) => header.key && header.value)
+      .map(
+        (header) =>
+          `${encodeURIComponent(header.key)}=${encodeURIComponent(header.value)}`,
+      )
+      .join('&');
 
-        if (headerParams) {
-            url += `?${headerParams}`;
-        }
+    if (headerParams) {
+      url += `?${headerParams}`;
     }
+  }
 
-    return url;
+  return url;
 };
 
-
 interface BuildRestfulApiUrlParams {
-    method: HttpMethod,
-    endpoint: string,
-    body: string | null,
-    headers: { key: string; value: string }[] | null
+  method: HttpMethod;
+  endpoint: string;
+  body: string | null;
+  headers: { key: string; value: string }[] | null;
 }
 export const buildRestfulApiUrl = ({
-    method,
-    endpoint,
-    body,
-    headers,
+  method,
+  endpoint,
+  body,
+  headers,
 }: BuildRestfulApiUrlParams): string => {
-    const encodedEndpoint = encodeBase64(endpoint);
+  const encodedEndpoint = encodeBase64(endpoint);
 
-    let url = `http://localhost:3000/${method}/${encodedEndpoint}`;
-    if(body) {
-        const encodedBody = encodeBase64(body);
-        url += `/${encodedBody}`;
-    }   
+  let url = `http://localhost:3000/${method}/${encodedEndpoint}`;
+  if (body) {
+    const encodedBody = encodeBase64(body);
+    url += `/${encodedBody}`;
+  }
 
-    if (headers) {
-        const headerParams = headers
-            .filter(header => header.key && header.value)
-            .map(header => `${encodeURIComponent(header.key)}=${encodeURIComponent(header.value)}`)
-            .join('&');
+  if (headers) {
+    const headerParams = headers
+      .filter((header) => header.key && header.value)
+      .map(
+        (header) =>
+          `${encodeURIComponent(header.key)}=${encodeURIComponent(header.value)}`,
+      )
+      .join('&');
 
-        if (headerParams) {
-            url += `?${headerParams}`;
-        }
+    if (headerParams) {
+      url += `?${headerParams}`;
     }
+  }
 
-    return url;
+  return url;
 };

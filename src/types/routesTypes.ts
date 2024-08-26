@@ -1,8 +1,8 @@
 export enum HttpMethod {
-    GET = 'GET',
-    POST = 'POST',
+  GET = 'GET',
+  POST = 'POST',
 }
 
 export interface Params {
-    params: string[];
+  params: string[];
 }

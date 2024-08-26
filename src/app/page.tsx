@@ -1,4 +1,4 @@
-import { useTranslation } from "../components/i18n";
+import { useTranslation } from '../components/i18n';
 
 export default async function Home() {
   const { t } = await useTranslation();

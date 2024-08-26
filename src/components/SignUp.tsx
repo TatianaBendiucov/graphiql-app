@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -22,7 +22,7 @@ const SignUp: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<SignUpFormInputs>({
-    mode: "all",
+    mode: 'all',
     resolver: yupResolver(schema(t)),
   });
 

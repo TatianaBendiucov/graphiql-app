@@ -1,17 +1,22 @@
-import { Params } from "@/types/routesTypes";
-import { NextResponse } from "next/server";
+import { Params } from '@/types/routesTypes';
+import { NextResponse } from 'next/server';
 
 export async function GET(req: Request, { params }: { params: Params }) {
   const [endpointEncoded, bodyEncoded] = params.params;
 
   if (!endpointEncoded) {
-    return NextResponse.json({ error: "Invalid URL format. Provide both endpoint and body in the URL." }, { status: 400 });
+    return NextResponse.json(
+      {
+        error: 'Invalid URL format. Provide both endpoint and body in the URL.',
+      },
+      { status: 400 },
+    );
   }
 
   try {
-    const endpoint = Buffer.from(endpointEncoded, "base64").toString("utf-8");
+    const endpoint = Buffer.from(endpointEncoded, 'base64').toString('utf-8');
     console.log(endpoint);
-    const body = Buffer.from(bodyEncoded, "base64").toString("utf-8");
+    const body = Buffer.from(bodyEncoded, 'base64').toString('utf-8');
 
     console.log(body);
     const url = new URL(req.url);
@@ -21,9 +26,9 @@ export async function GET(req: Request, { params }: { params: Params }) {
     });
 
     const response = await fetch(endpoint, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         ...headers,
       },
       body: body,

@@ -23,12 +23,11 @@ const LanguageSwitcher: React.FC = () => {
       variant="outlined"
       style={{ marginLeft: 10 }}
     >
-      {languages
-        .map((l) => (
-          <MenuItem key={l} value={l}>
-            {l}
-          </MenuItem>
-        ))}
+      {languages.map((l) => (
+        <MenuItem key={l} value={l}>
+          {l}
+        </MenuItem>
+      ))}
     </Select>
   );
 };

@@ -22,29 +22,21 @@ const Header: React.FC = () => {
     <AppBar position="sticky">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          <ButtonBase 
-            href={'/'}
-          >{t('home')}</ButtonBase>
+          <ButtonBase href={'/'}>{t('home')}</ButtonBase>
         </Typography>
 
         <Box>
           <LanguageSwitcher />
-        {
-          !currentUser ?
+          {!currentUser ? (
             <>
-              <ButtonBase 
-                href={'/signup'}
-              >{t('sign_up')}</ButtonBase>
-              <ButtonBase 
-                href={'/signin'}
-              >{t('sign_in')}</ButtonBase>
+              <ButtonBase href={'/signup'}>{t('sign_up')}</ButtonBase>
+              <ButtonBase href={'/signin'}>{t('sign_in')}</ButtonBase>
             </>
-          : 
-            <ButtonBase 
-              href={'/'}
-              handleClick={handleSignOut}
-            >{t('log_out')}</ButtonBase>
-          }
+          ) : (
+            <ButtonBase href={'/'} handleClick={handleSignOut}>
+              {t('log_out')}
+            </ButtonBase>
+          )}
         </Box>
       </Toolbar>
     </AppBar>
