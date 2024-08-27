@@ -13,6 +13,7 @@
   "inputs": {
     "email": "Email Address",
     "password": "Password",
+    "name": "Name",
     "headers": "Headers",
     "endpoint": "Endpoint (URL)",
     "body": "Body",

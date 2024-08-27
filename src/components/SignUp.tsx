@@ -4,7 +4,7 @@ import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField, Button, Box, Typography, Container } from '@mui/material';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import { schema } from '@/utils/validations/SignUpSchema';
 import { useTranslation } from './i18n/client';
@@ -13,6 +13,7 @@ import { showToast } from './ShowToast';
 interface SignUpFormInputs {
   email: string;
   password: string;
+  name: string;
 }
 
 const SignUp: React.FC = () => {
@@ -26,19 +27,20 @@ const SignUp: React.FC = () => {
     resolver: yupResolver(schema(t)),
   });
 
-  // const [error, setError] = React.useState<string | null>(null);
-  // const [success, setSuccess] = React.useState<string | null>(null);
-
   const onSubmit: SubmitHandler<SignUpFormInputs> = async (data) => {
     try {
-      await createUserWithEmailAndPassword(auth, data.email, data.password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password,
+      );
+      const user = userCredential.user;
+      await updateProfile(user, {
+        displayName: data.name,
+      });
       showToast('success', 'Login was syccessifuly');
-      // setSuccess('User registered successfully!');
-      // setError(null);
     } catch (error) {
       showToast('error', error.message);
-      // setError(error.message);
-      // setSuccess(null);
     }
   };
 
@@ -80,8 +82,18 @@ const SignUp: React.FC = () => {
             helperText={errors.password?.message}
             autoComplete="current-password"
           />
-          {/* {error && <Typography color="error">{error}</Typography>}
-          {success && <Typography color="primary">{success}</Typography>} */}
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label={t('inputs.name')}
+            type="text"
+            id="name"
+            {...register('name')}
+            error={!!errors.name}
+            helperText={errors.name?.message}
+            autoComplete="name"
+          />
           <Button
             type="submit"
             fullWidth

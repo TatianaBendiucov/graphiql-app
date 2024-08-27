@@ -9,6 +9,7 @@ import { auth } from '@/utils/firebase';
 import { schema } from '@/utils/validations/SignInSchema';
 import { useTranslation } from './i18n/client';
 import { showToast } from './ShowToast';
+import { useRouter } from 'next/navigation';
 
 interface SignInFormInputs {
   email: string;
@@ -17,6 +18,7 @@ interface SignInFormInputs {
 
 const SignIn: React.FC = () => {
   const { t } = useTranslation();
+  const router = useRouter();
 
   const {
     register,
@@ -30,7 +32,8 @@ const SignIn: React.FC = () => {
   const onSubmit: SubmitHandler<SignInFormInputs> = async (data) => {
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
-      showToast('success', 'Login was syccessifuly');
+      showToast('success', 'Login was successfully');
+      router.push('/');
     } catch (error) {
       showToast('error', error.message);
     }

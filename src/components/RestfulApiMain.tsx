@@ -63,26 +63,37 @@ const RestfulApiPlayground = () => {
     }
   };
 
+  const replacePlaceholdersWithVariables = (
+    template: string,
+    variables: Record<string, string>,
+  ) => {
+    let result = template;
+    Object.keys(variables).forEach((key) => {
+      const placeholder = new RegExp(`{{${key}}}`, 'g');
+      result = result.replace(placeholder, variables[key]);
+    });
+    return result;
+  };
+
   const handleSend = async () => {
     const isValid = await validate();
     console.log(isValid);
     if (!isValid) return;
 
     try {
-      const bodyObject: Record<string, string | object> = {};
-
-      bodyObject.body = body;
-      let variablesOb: object | null;
+      let parsedVariables: Record<string, string> | null = null;
       try {
-        variablesOb = JSON.parse(variables);
+        parsedVariables = JSON.parse(variables);
       } catch (e) {
-        variablesOb = null;
-      }
-      if (variablesOb) {
-        bodyObject.variables = variablesOb;
+        console.error('Invalid JSON in variables:', e);
       }
 
-      const bodyJson = JSON.stringify(bodyObject)
+      let processedBody = body;
+      if (parsedVariables) {
+        processedBody = replacePlaceholdersWithVariables(body, parsedVariables);
+      }
+
+      const bodyJson = JSON.stringify(processedBody)
         .replace(/\\n/g, '')
         .replace(/\s+/g, ' ');
 
@@ -237,7 +248,7 @@ const RestfulApiPlayground = () => {
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h6">{t('variables_editor')}</Typography>
+          <Typography variant="h6">{t('inputs.variables_editor')}</Typography>
           <CodeMirror
             className="editor"
             width="100%"

@@ -8,11 +8,11 @@ import useAuth from '@/hooks/useAuth';
 import ButtonBase from './Button';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useTranslation } from './i18n/client';
+import Image from 'next/image';
 
 const Header: React.FC = () => {
   const { t } = useTranslation();
   const { currentUser } = useAuth();
-  console.log(currentUser);
 
   const handleSignOut = async () => {
     await signOut(auth);
@@ -21,6 +21,9 @@ const Header: React.FC = () => {
   return (
     <AppBar position="sticky">
       <Toolbar>
+        <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+          <Image src="/logo.png" alt="Logo" layout="fill" objectFit="contain" />
+        </Box>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           <ButtonBase href={'/'}>{t('home')}</ButtonBase>
         </Typography>

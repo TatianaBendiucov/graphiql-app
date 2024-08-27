@@ -11,6 +11,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
   const headers: Record<string, string> = Object.fromEntries(
     new URLSearchParams(request.url.split('?')[1]),
   );
+  console.log(body);
 
   try {
     const response = await fetch(decodedUrl, {

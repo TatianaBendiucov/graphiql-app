@@ -14,5 +14,6 @@ export const schema = (t: TFunction) => {
         t('errors.least_one_special_character'),
       )
       .min(6),
+    name: yup.string().required(),
   });
 };
