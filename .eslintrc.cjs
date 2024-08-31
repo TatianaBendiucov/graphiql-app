@@ -42,6 +42,7 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'react-compiler/react-compiler': 'error',
     'react-hooks/exhaustive-deps': 'off',
+    'react/no-unescaped-entities': 'off'
   },
   settings: {
     react: {

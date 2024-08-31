@@ -9,6 +9,7 @@ import { auth } from '@/utils/firebase';
 import { schema } from '@/utils/validations/SignUpSchema';
 import { useTranslation } from './i18n/client';
 import { showToast } from './ShowToast';
+import { useRouter } from 'next/navigation';
 
 interface SignUpFormInputs {
   email: string;
@@ -18,6 +19,8 @@ interface SignUpFormInputs {
 
 const SignUp: React.FC = () => {
   const { t } = useTranslation();
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -38,7 +41,8 @@ const SignUp: React.FC = () => {
       await updateProfile(user, {
         displayName: data.name,
       });
-      showToast('success', 'Login was syccessifuly');
+      showToast('success', 'Login was successful');
+      router.push('/');
     } catch (error) {
       showToast('error', error.message);
     }

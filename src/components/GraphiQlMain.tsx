@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { graphql } from 'cm6-graphql';
@@ -21,8 +21,16 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import * as Yup from 'yup';
 import { formatSdl } from 'format-graphql';
 import { useTranslation } from './i18n/client';
+import {
+  getRequestById,
+  RequestHistoryItem,
+  saveRequestToLocalStorage,
+} from '@/utils/localStorageHelpers';
+import { v4 as uuidv4 } from 'uuid';
+import { useSearchParams } from 'next/navigation';
 
 const GraphQLPlayground = () => {
+  const searchParams = useSearchParams();
   const { t } = useTranslation();
   const [endpoint, setEndpoint] = useState<string>('');
   const [sdlEndpoint, setSdlEndpoint] = useState<string>(`${endpoint}?sdl`);
@@ -120,6 +128,20 @@ const GraphQLPlayground = () => {
       const jsonResponse = await res.json();
       setResponse(JSON.stringify(jsonResponse, null, 2));
       setResponseStatus(res.status);
+
+      const requestForHistory: RequestHistoryItem = {
+        id: uuidv4(),
+        type: 'GraphQL',
+        timestamp: Date.now(),
+        url: endpoint,
+        method: '',
+        headers,
+        body: query,
+        variables: JSON.stringify(variablesOb) || '{}',
+        sdl: sdlEndpoint,
+      };
+
+      saveRequestToLocalStorage(requestForHistory);
     } catch (error) {
       setResponse('Error: ' + error.message);
     }
@@ -153,6 +175,21 @@ const GraphQLPlayground = () => {
     const formatted = formatSdl(query);
     setQuery(formatted);
   };
+
+  useEffect(() => {
+    const uuid = searchParams.get('id');
+    if (uuid) {
+      const savedRequest = getRequestById(uuid);
+      console.log(savedRequest);
+      if (savedRequest) {
+        setEndpoint(savedRequest.url || '');
+        setSdlEndpoint(savedRequest.sdl || '');
+        setHeaders(savedRequest.headers || []);
+        setVariables(savedRequest.variables || '{}');
+        setQuery(savedRequest.body || '');
+      }
+    }
+  }, [searchParams]);
 
   return (
     <Box sx={{ p: 3 }}>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { json } from '@codemirror/lang-json';
@@ -21,6 +21,13 @@ import HttpMethodSelector from '@/components/FormControls/HttpMethodSelector';
 import { HttpMethod } from '@/types/routesTypes';
 import { schema } from '@/utils/validations/RestfulApiSchema';
 import { useTranslation } from './i18n/client';
+import {
+  getRequestById,
+  RequestHistoryItem,
+  saveRequestToLocalStorage,
+} from '@/utils/localStorageHelpers';
+import { v4 as uuidv4 } from 'uuid';
+import { useSearchParams } from 'next/navigation';
 
 const RestfulApiPlayground = () => {
   const { t } = useTranslation();
@@ -33,6 +40,7 @@ const RestfulApiPlayground = () => {
   const [variables, setVariables] = useState<string>('{}');
   const [validationErrors, setValidationErrors] = useState({});
   const editorRef = useRef(null);
+  const searchParams = useSearchParams();
 
   const validate = async () => {
     try {
@@ -77,7 +85,7 @@ const RestfulApiPlayground = () => {
 
   const handleSend = async () => {
     const isValid = await validate();
-    console.log(isValid);
+
     if (!isValid) return;
 
     try {
@@ -111,7 +119,6 @@ const RestfulApiPlayground = () => {
         },
       });
 
-      console.log(res);
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
@@ -119,6 +126,18 @@ const RestfulApiPlayground = () => {
       const jsonResponse = await res.json();
       setResponse(JSON.stringify(jsonResponse, null, 2));
       setResponseStatus(res.status);
+
+      const request: RequestHistoryItem = {
+        id: uuidv4(),
+        type: 'REST',
+        timestamp: Date.now(),
+        url: endpoint,
+        method,
+        headers,
+        body,
+      };
+
+      saveRequestToLocalStorage(request);
     } catch (error) {
       setResponse('Error: ' + error.message);
     }
@@ -156,6 +175,18 @@ const RestfulApiPlayground = () => {
       console.error('Failed to format JSON:', error);
     }
   };
+
+  useEffect(() => {
+    const uuid = searchParams.get('id');
+    if (uuid) {
+      const savedRequest = getRequestById(uuid);
+      if (savedRequest) {
+        setEndpoint(savedRequest?.url || '');
+        setHeaders(savedRequest?.headers || []);
+        setBody(savedRequest.body || '');
+      }
+    }
+  }, [searchParams]);
 
   return (
     <Box sx={{ p: 3 }}>
