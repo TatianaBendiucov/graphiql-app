@@ -19,7 +19,7 @@ body {
 }
 
 main {
-  height: 100%;
+  height: calc(100% - 151px);
 }
 
 @layer utilities {
@@ -54,4 +54,12 @@ main {
 .page-not-found h2 {
   font-size: 45px;
   line-height: 45px;
+}
+
+.main-footer__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-top: 5px solid #000;
 }

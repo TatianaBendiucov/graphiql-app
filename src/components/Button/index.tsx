@@ -7,6 +7,7 @@ interface ButtonProps {
   variant?: 'contained' | 'outlined' | 'text';
   handleClick?: () => void;
   href?: string;
+  target?: string;
   color?:
     | 'inherit'
     | 'primary'
@@ -22,12 +23,14 @@ interface ButtonProps {
 interface Props {
   component?: typeof NextLink;
   href?: string;
+  target?: string;
 }
 
 const ButtonBase = ({
   children,
   handleClick = () => {},
   href = '',
+  target = '',
   variant = 'contained',
   color = 'primary',
   type = 'button',
@@ -38,6 +41,10 @@ const ButtonBase = ({
   if (href) {
     props.component = NextLink;
     props.href = href;
+
+    if (target.length) {
+      props.target = target;
+    }
   }
 
   const batton = (
