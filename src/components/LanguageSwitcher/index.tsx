@@ -20,7 +20,7 @@ const LanguageSwitcher: React.FC = () => {
     <Select
       value={lng}
       onChange={handleLanguageChange}
-      variant="outlined"
+      variant="standard"
       style={{ marginLeft: 10 }}
     >
       {languages.map((l) => (

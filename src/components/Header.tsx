@@ -25,19 +25,23 @@ const Header: React.FC = () => {
         justifyContent={'space-between'}
         alignItems={'center'}
       >
-        <ButtonBase href={'/'}>
-          <Image src="/logo.png" alt="Logo" width={130} height={30} />
+        <ButtonBase href={'/'} color={'inherit'} variant="text">
+          <Image src="/logo-project.png" alt="Logo" width={130} height={30} />
         </ButtonBase>
 
         <Box>
           <LanguageSwitcher />
           {!currentUser ? (
             <>
-              <ButtonBase href={'/signup'}>{t('sign_up')}</ButtonBase>
-              <ButtonBase href={'/signin'}>{t('sign_in')}</ButtonBase>
+              <ButtonBase variant="text" color={'inherit'} href={'/signup'}>
+                {t('sign_up')}
+              </ButtonBase>
+              <ButtonBase variant="text" color={'inherit'} href={'/signin'}>
+                {t('sign_in')}
+              </ButtonBase>
             </>
           ) : (
-            <ButtonBase href={'/'} handleClick={handleSignOut}>
+            <ButtonBase variant="text" href={'/'} handleClick={handleSignOut}>
               {t('log_out')}
             </ButtonBase>
           )}
