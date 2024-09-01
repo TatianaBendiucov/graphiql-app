@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { AppBar, Toolbar, Typography, Box } from '@mui/material';
+import { AppBar, Box } from '@mui/material';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import useAuth from '@/hooks/useAuth';
@@ -20,13 +20,14 @@ const Header: React.FC = () => {
 
   return (
     <AppBar position="sticky">
-      <Toolbar>
-        <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-          <Image src="/logo.png" alt="Logo" layout="fill" objectFit="contain" />
-        </Box>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          <ButtonBase href={'/'}>{t('home')}</ButtonBase>
-        </Typography>
+      <Box
+        display={'flex'}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+      >
+        <ButtonBase href={'/'}>
+          <Image src="/logo.png" alt="Logo" width={130} height={30} />
+        </ButtonBase>
 
         <Box>
           <LanguageSwitcher />
@@ -41,7 +42,7 @@ const Header: React.FC = () => {
             </ButtonBase>
           )}
         </Box>
-      </Toolbar>
+      </Box>
     </AppBar>
   );
 };

@@ -53,7 +53,7 @@ const SignUp: React.FC = () => {
     <Container maxWidth="xs">
       <Box
         sx={{
-          marginTop: 8,
+          paddingTop: 8,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
