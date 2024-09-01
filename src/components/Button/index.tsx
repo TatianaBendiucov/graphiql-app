@@ -29,7 +29,7 @@ const ButtonBase = ({
   handleClick = () => {},
   href = '',
   variant = 'contained',
-  color = 'inherit',
+  color = 'primary',
   type = 'button',
   fullWidth = false,
 }: ButtonProps) => {

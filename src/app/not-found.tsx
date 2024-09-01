@@ -4,8 +4,9 @@ import ButtonBase from '@/components/Button';
 
 export default function NotFound() {
   return (
-    <div>
-      <h2>Not Found 404</h2>
+    <div className="page-not-found">
+      <h1>404</h1>
+      <h2>Not Found</h2>
       <p>Could not find requested resource</p>
       <div>
         Go to <ButtonBase href="/">Home page</ButtonBase>
