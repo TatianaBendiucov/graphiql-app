@@ -19,7 +19,7 @@ body {
 }
 
 main {
-  height: calc(100% - 151px);
+  min-height: calc(100% - 151px);
 }
 
 @layer utilities {
@@ -61,5 +61,5 @@ main {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  border-top: 5px solid #000;
+  border-top: 5px solid #1976d2;
 }

@@ -41,7 +41,12 @@ const Header: React.FC = () => {
               </ButtonBase>
             </>
           ) : (
-            <ButtonBase variant="text" href={'/'} handleClick={handleSignOut}>
+            <ButtonBase
+              variant="text"
+              color={'inherit'}
+              href={'/'}
+              handleClick={handleSignOut}
+            >
               {t('log_out')}
             </ButtonBase>
           )}

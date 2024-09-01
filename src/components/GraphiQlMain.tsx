@@ -12,6 +12,7 @@ import {
   TextField,
   Typography,
   IconButton,
+  Stack,
 } from '@mui/material';
 import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material';
 import { buildGraphQLUrl } from '@/utils/utils';
@@ -266,9 +267,19 @@ const GraphQLPlayground = () => {
             </Grid>
           ))}
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6">Query Editor</Typography>
-          <Box>
+
+        <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+          <Box sx={{ width: '50%' }}>
+            <Typography variant="h6">
+              Query Editor
+              <ButtonBase
+                variant="contained"
+                color="secondary"
+                handleClick={formatCode}
+              >
+                <AutoFixHighIcon />
+              </ButtonBase>
+            </Typography>
             <CodeMirror
               className="editor"
               height="100%"
@@ -279,32 +290,28 @@ const GraphQLPlayground = () => {
               ref={editorRef}
             />
             <Typography color="error">{validationErrors.query}</Typography>
-            <ButtonBase
-              variant="contained"
-              color="secondary"
-              handleClick={formatCode}
-            >
-              <AutoFixHighIcon />
-            </ButtonBase>
           </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6">Variables Editor</Typography>
-          <CodeMirror
-            className="editor"
-            width="100%"
-            value={variables}
-            theme={oneDark}
-            onChange={(value) => setVariables(value)}
-            extensions={[json()]}
-          />
-          <Typography color="error">{validationErrors.variables}</Typography>
-        </Grid>
+
+          <Box sx={{ width: '50%' }}>
+            <Typography variant="h6">Variables Editor</Typography>
+            <CodeMirror
+              className="editor"
+              width="100%"
+              value={variables}
+              theme={oneDark}
+              onChange={(value) => setVariables(value)}
+              extensions={[json()]}
+            />
+            <Typography color="error">{validationErrors.variables}</Typography>
+          </Box>
+        </Stack>
+
         <Grid item xs={12}>
           <ButtonBase
             variant="contained"
             color="primary"
             handleClick={handleRunQuery}
+            fullWidth
           >
             Run Query
           </ButtonBase>

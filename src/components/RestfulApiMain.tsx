@@ -11,6 +11,7 @@ import {
   TextField,
   Typography,
   IconButton,
+  Stack,
 } from '@mui/material';
 import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material';
 import { buildRestfulApiUrl } from '@/utils/utils';
@@ -29,6 +30,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSearchParams } from 'next/navigation';
 import ButtonBase from './Button';
 
+const validationErrorsInit = {
+  endpoint: '',
+  headers: [],
+  variables: '',
+  body: '',
+};
+
 const RestfulApiPlayground = () => {
   const { t } = useTranslation();
   const [endpoint, setEndpoint] = useState<string>('');
@@ -38,7 +46,9 @@ const RestfulApiPlayground = () => {
   const [responseStatus, setResponseStatus] = useState<number | null>(null);
   const [headers, setHeaders] = useState<{ key: string; value: string }[]>([]);
   const [variables, setVariables] = useState<string>('{}');
-  const [validationErrors, setValidationErrors] = useState({});
+  const [validationErrors, setValidationErrors] = useState({
+    ...validationErrorsInit,
+  });
   const editorRef = useRef(null);
   const searchParams = useSearchParams();
 
@@ -54,7 +64,7 @@ const RestfulApiPlayground = () => {
         },
         { abortEarly: false },
       );
-      setValidationErrors({});
+      setValidationErrors({ ...validationErrorsInit });
       return true;
     } catch (err) {
       console.log(err);
@@ -65,7 +75,7 @@ const RestfulApiPlayground = () => {
             errors[error.path] = error.message;
           }
         });
-        setValidationErrors(errors);
+        setValidationErrors({ ...validationErrorsInit, ...errors });
       }
       return false;
     }
@@ -213,51 +223,65 @@ const RestfulApiPlayground = () => {
           <IconButton onClick={addHeader}>
             <AddCircleOutline color="primary" />
           </IconButton>
-          {headers.map((header, index) => (
-            <Grid container spacing={2} key={index}>
-              <Grid item xs={5}>
-                <TextField
-                  fullWidth
-                  label={t('inputs.header_key', { index: index + 1 })}
-                  value={header.key}
-                  onChange={(e) =>
-                    handleHeaderChange(index, 'key', e.target.value)
-                  }
-                  variant="outlined"
-                  error={!!validationErrors.headers?.[index]?.key}
-                  helperText={validationErrors.headers?.[index]?.key}
-                />
+          {headers.map((header, index) => {
+            const thisError = validationErrors.headers?.[index];
+
+            return (
+              <Grid container spacing={2} key={index}>
+                <Grid item xs={5}>
+                  <TextField
+                    fullWidth
+                    label={t('inputs.header_key', { index: index + 1 })}
+                    value={header.key}
+                    onChange={(e) =>
+                      handleHeaderChange(index, 'key', e.target.value)
+                    }
+                    variant="outlined"
+                    error={!!thisError?.key}
+                    helperText={thisError?.key}
+                  />
+                </Grid>
+                <Grid item xs={5}>
+                  <TextField
+                    fullWidth
+                    label={t('inputs.header_value', { index: index + 1 })}
+                    value={header.value}
+                    onChange={(e) =>
+                      handleHeaderChange(index, 'value', e.target.value)
+                    }
+                    variant="outlined"
+                    error={!!thisError?.value}
+                    helperText={thisError?.value}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={2}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <IconButton onClick={() => removeHeader(index)}>
+                    <RemoveCircleOutline color="error" />
+                  </IconButton>
+                </Grid>
               </Grid>
-              <Grid item xs={5}>
-                <TextField
-                  fullWidth
-                  label={t('inputs.header_value', { index: index + 1 })}
-                  value={header.value}
-                  onChange={(e) =>
-                    handleHeaderChange(index, 'value', e.target.value)
-                  }
-                  variant="outlined"
-                  error={!!validationErrors.headers?.[index]?.value}
-                  helperText={validationErrors.headers?.[index]?.value}
-                />
-              </Grid>
-              <Grid
-                item
-                xs={2}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <IconButton onClick={() => removeHeader(index)}>
-                  <RemoveCircleOutline color="error" />
-                </IconButton>
-              </Grid>
-            </Grid>
-          ))}
+            );
+          })}
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6">{t('inputs.body')}</Typography>
-          <Box>
+
+        <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+          <Box sx={{ width: '50%' }}>
+            <Typography variant="h6">
+              {t('inputs.body')}
+              <ButtonBase
+                variant="contained"
+                color="secondary"
+                handleClick={formatCode}
+              >
+                <AutoFixHighIcon />
+              </ButtonBase>
+            </Typography>
             <CodeMirror
               className="editor"
               height="100%"
@@ -268,36 +292,33 @@ const RestfulApiPlayground = () => {
               ref={editorRef}
             />
             <Typography color="error">{validationErrors?.body}</Typography>
-            <ButtonBase
-              variant="contained"
-              color="secondary"
-              handleClick={formatCode}
-            >
-              <AutoFixHighIcon />
-            </ButtonBase>
           </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6">{t('inputs.variables_editor')}</Typography>
-          <CodeMirror
-            className="editor"
-            width="100%"
-            value={variables}
-            theme={oneDark}
-            onChange={(value) => setVariables(value)}
-            extensions={[json()]}
-          />
-          <Typography color="error">{validationErrors.variables}</Typography>
-        </Grid>
+
+          <Box sx={{ width: '50%' }}>
+            <Typography variant="h6">{t('inputs.variables_editor')}</Typography>
+            <CodeMirror
+              className="editor"
+              width="100%"
+              value={variables}
+              theme={oneDark}
+              onChange={(value) => setVariables(value)}
+              extensions={[json()]}
+            />
+            <Typography color="error">{validationErrors.variables}</Typography>
+          </Box>
+        </Stack>
+
         <Grid item xs={12}>
           <ButtonBase
             variant="contained"
             color="primary"
             handleClick={handleSend}
+            fullWidth
           >
             {t('send')}
           </ButtonBase>
         </Grid>
+
         <Grid item xs={12}>
           <Typography variant="h6">{t('response_status')}</Typography>
           <pre>{responseStatus}</pre>
