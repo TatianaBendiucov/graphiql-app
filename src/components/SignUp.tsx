@@ -3,13 +3,14 @@
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField, Button, Box, Typography, Container } from '@mui/material';
+import { TextField, Box, Typography, Container } from '@mui/material';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import { schema } from '@/utils/validations/SignUpSchema';
 import { useTranslation } from './i18n/client';
 import { showToast } from './ShowToast';
 import { useRouter } from 'next/navigation';
+import ButtonBase from './Button';
 
 interface SignUpFormInputs {
   email: string;
@@ -98,15 +99,14 @@ const SignUp: React.FC = () => {
             helperText={errors.name?.message}
             autoComplete="name"
           />
-          <Button
+          <ButtonBase
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            sx={{ mt: 3, mb: 2 }}
           >
             {t('sign_up')}
-          </Button>
+          </ButtonBase>
         </Box>
       </Box>
     </Container>

@@ -1,6 +1,7 @@
 'use client';
 
-import { Box, Typography, Link, Button } from '@mui/material';
+import ButtonBase from '@/components/Button';
+import { Box, Typography } from '@mui/material';
 import {
   clearRequestHistory,
   getRequestHistoryFromLocalStorage,
@@ -28,32 +29,28 @@ const HistoryMain = () => {
           <Typography variant="body1">
             It\'s empty here. Try those options:
           </Typography>
-          <Link href="/restful" variant="body1">
-            RESTful Client
-          </Link>
-          <Link href="/graphiql" variant="body1">
-            GraphiQL Client
-          </Link>
+          <ButtonBase href="/restful">RESTful Client</ButtonBase>
+          <ButtonBase href="/graphiql">GraphiQL Client</ButtonBase>
         </Box>
       ) : (
         <Box>
           {history.map((item) => (
             <Box key={item.id} mb={2}>
               <Typography variant="body1">
-                <Link href="#" onClick={() => handleNavigation(item)}>
+                <ButtonBase handleClick={() => handleNavigation(item)}>
                   {item.type} Request -{' '}
                   {new Date(item.timestamp).toLocaleString()}
-                </Link>
+                </ButtonBase>
               </Typography>
             </Box>
           ))}
-          <Button
-            onClick={() => clearRequestHistory()}
+          <ButtonBase
+            handleClick={() => clearRequestHistory()}
             variant="outlined"
             color="secondary"
           >
             Clear History
-          </Button>
+          </ButtonBase>
         </Box>
       )}
     </Box>

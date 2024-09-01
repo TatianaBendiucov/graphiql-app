@@ -8,10 +8,9 @@ import {
   Grid,
   Card,
   CardContent,
-  Button,
 } from '@mui/material';
-import Link from 'next/link';
 import useAuth from '@/hooks/useAuth';
+import ButtonBase from './Button';
 
 const HomeMain: React.FC = () => {
   const { currentUser } = useAuth();
@@ -38,11 +37,14 @@ const HomeMain: React.FC = () => {
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
                       Test and interact with RESTful APIs.
                     </Typography>
-                    <Link href="/restful" passHref>
-                      <Button variant="contained" color="primary" fullWidth>
-                        Go to RESTful
-                      </Button>
-                    </Link>
+                    <ButtonBase
+                      href="/restful"
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                    >
+                      Go to RESTful
+                    </ButtonBase>
                   </CardContent>
                 </Card>
               </Grid>
@@ -55,11 +57,14 @@ const HomeMain: React.FC = () => {
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
                       Explore and query your GraphQL APIs.
                     </Typography>
-                    <Link href="/graphiql" passHref>
-                      <Button variant="contained" color="primary" fullWidth>
-                        Go to GraphiQL
-                      </Button>
-                    </Link>
+                    <ButtonBase
+                      href="/graphiql"
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                    >
+                      Go to GraphiQL
+                    </ButtonBase>
                   </CardContent>
                 </Card>
               </Grid>
@@ -72,11 +77,14 @@ const HomeMain: React.FC = () => {
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
                       Review and manage your API call history.
                     </Typography>
-                    <Link href="/history" passHref>
-                      <Button variant="contained" color="primary" fullWidth>
-                        Go to History
-                      </Button>
-                    </Link>
+                    <ButtonBase
+                      href="/history"
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                    >
+                      Go to History
+                    </ButtonBase>
                   </CardContent>
                 </Card>
               </Grid>
@@ -87,16 +95,22 @@ const HomeMain: React.FC = () => {
         <>
           <Box>Welcome!</Box>
           <Grid container spacing={3} justifyContent="center">
-            <Link href="/signup" passHref>
-              <Button variant="contained" color="primary" fullWidth>
-                Sign up
-              </Button>
-            </Link>
-            <Link href="/signin" passHref>
-              <Button variant="contained" color="primary" fullWidth>
-                Sign in
-              </Button>
-            </Link>
+            <ButtonBase
+              href="/signup"
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
+              Sign up
+            </ButtonBase>
+            <ButtonBase
+              href="/signin"
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
+              Sign in
+            </ButtonBase>
           </Grid>
         </>
       )}

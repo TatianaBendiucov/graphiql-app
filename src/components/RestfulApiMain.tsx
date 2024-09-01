@@ -6,7 +6,6 @@ import { oneDark } from '@codemirror/theme-one-dark';
 import { json } from '@codemirror/lang-json';
 import {
   Box,
-  Button,
   Grid,
   Paper,
   TextField,
@@ -28,6 +27,7 @@ import {
 } from '@/utils/localStorageHelpers';
 import { v4 as uuidv4 } from 'uuid';
 import { useSearchParams } from 'next/navigation';
+import ButtonBase from './Button';
 
 const RestfulApiPlayground = () => {
   const { t } = useTranslation();
@@ -268,14 +268,13 @@ const RestfulApiPlayground = () => {
               ref={editorRef}
             />
             <Typography color="error">{validationErrors?.body}</Typography>
-            <Button
+            <ButtonBase
               variant="contained"
               color="secondary"
-              onClick={formatCode}
-              sx={{ mt: 1 }}
+              handleClick={formatCode}
             >
               <AutoFixHighIcon />
-            </Button>
+            </ButtonBase>
           </Box>
         </Grid>
         <Grid item xs={12}>
@@ -291,9 +290,13 @@ const RestfulApiPlayground = () => {
           <Typography color="error">{validationErrors.variables}</Typography>
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" color="primary" onClick={handleSend}>
+          <ButtonBase
+            variant="contained"
+            color="primary"
+            handleClick={handleSend}
+          >
             {t('send')}
-          </Button>
+          </ButtonBase>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h6">{t('response_status')}</Typography>

@@ -3,13 +3,14 @@
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField, Button, Box, Typography, Container } from '@mui/material';
+import { TextField, Box, Typography, Container } from '@mui/material';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import { schema } from '@/utils/validations/SignInSchema';
 import { useTranslation } from './i18n/client';
 import { showToast } from './ShowToast';
 import { useRouter } from 'next/navigation';
+import ButtonBase from './Button';
 
 interface SignInFormInputs {
   email: string;
@@ -77,15 +78,14 @@ const SignIn: React.FC = () => {
             helperText={errors.password?.message}
             autoComplete="current-password"
           />
-          <Button
+          <ButtonBase
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            sx={{ mt: 3, mb: 2 }}
           >
             {t('sign_in')}
-          </Button>
+          </ButtonBase>
         </Box>
       </Box>
     </Container>

@@ -4,8 +4,19 @@ import { ReactNode } from 'react';
 
 interface ButtonProps {
   children: ReactNode;
+  variant?: 'contained' | 'outlined' | 'text';
   handleClick?: () => void;
   href?: string;
+  color?:
+    | 'inherit'
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'error'
+    | 'info'
+    | 'warning';
+  fullWidth?: boolean;
+  type?: 'button' | 'submit';
 }
 
 interface Props {
@@ -17,6 +28,10 @@ const ButtonBase = ({
   children,
   handleClick = () => {},
   href = '',
+  variant = 'contained',
+  color = 'inherit',
+  type = 'button',
+  fullWidth = false,
 }: ButtonProps) => {
   const props: Props = {};
 
@@ -26,7 +41,14 @@ const ButtonBase = ({
   }
 
   const batton = (
-    <Button color="inherit" onClick={handleClick} {...props}>
+    <Button
+      variant={variant}
+      color={color}
+      onClick={handleClick}
+      fullWidth={fullWidth}
+      type={type}
+      {...props}
+    >
       {children}
     </Button>
   );

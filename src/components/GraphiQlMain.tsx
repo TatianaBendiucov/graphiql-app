@@ -7,7 +7,6 @@ import { graphql } from 'cm6-graphql';
 import { json } from '@codemirror/lang-json'; // Import the JSON language
 import {
   Box,
-  Button,
   Grid,
   Paper,
   TextField,
@@ -28,6 +27,7 @@ import {
 } from '@/utils/localStorageHelpers';
 import { v4 as uuidv4 } from 'uuid';
 import { useSearchParams } from 'next/navigation';
+import ButtonBase from './Button';
 
 const GraphQLPlayground = () => {
   const searchParams = useSearchParams();
@@ -279,14 +279,13 @@ const GraphQLPlayground = () => {
               ref={editorRef}
             />
             <Typography color="error">{validationErrors.query}</Typography>
-            <Button
+            <ButtonBase
               variant="contained"
               color="secondary"
-              onClick={formatCode}
-              sx={{ mt: 1 }}
+              handleClick={formatCode}
             >
               <AutoFixHighIcon />
-            </Button>
+            </ButtonBase>
           </Box>
         </Grid>
         <Grid item xs={12}>
@@ -302,9 +301,13 @@ const GraphQLPlayground = () => {
           <Typography color="error">{validationErrors.variables}</Typography>
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" color="primary" onClick={handleRunQuery}>
+          <ButtonBase
+            variant="contained"
+            color="primary"
+            handleClick={handleRunQuery}
+          >
             Run Query
-          </Button>
+          </ButtonBase>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h6">Response Status</Typography>
