@@ -29,6 +29,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { useSearchParams } from 'next/navigation';
 import ButtonBase from './Button';
+import withAuth from '@/utils/withAuth';
 
 const validationErrorsInit = {
   endpoint: '',
@@ -334,4 +335,4 @@ const RestfulApiPlayground = () => {
   );
 };
 
-export default RestfulApiPlayground;
+export default withAuth(RestfulApiPlayground);

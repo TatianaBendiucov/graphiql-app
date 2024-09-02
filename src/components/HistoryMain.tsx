@@ -8,6 +8,7 @@ import {
   RequestHistoryItem,
 } from '@/utils/localStorageHelpers';
 import { useRouter } from 'next/navigation';
+import withAuth from '@/utils/withAuth';
 
 const HistoryMain = () => {
   const router = useRouter();
@@ -56,4 +57,4 @@ const HistoryMain = () => {
     </Box>
   );
 };
-export default HistoryMain;
+export default withAuth(HistoryMain);

@@ -29,18 +29,32 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { useSearchParams } from 'next/navigation';
 import ButtonBase from './Button';
+import withAuth from '../utils/withAuth';
 
 const GraphQLPlayground = () => {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
-  const [endpoint, setEndpoint] = useState<string>('');
+  const [endpoint, setEndpoint] = useState<string>(
+    'https://rickandmortyapi.com/graphql',
+  );
   const [sdlEndpoint, setSdlEndpoint] = useState<string>(`${endpoint}?sdl`);
-  const [query, setQuery] = useState<string>('');
+  const [query, setQuery] = useState<string>(`query ($id: ID!) {
+    character(id: $id) {
+      id
+      name
+      status
+      species
+      gender
+      image
+      created
+    }
+  }
+`);
   const [response, setResponse] = useState<string | null>(null);
   const [responseStatus, setResponseStatus] = useState<number | null>(null);
   const [sdlResponse, setSdlResponse] = useState<string | null>(null);
   const [headers, setHeaders] = useState<{ key: string; value: string }[]>([]);
-  const [variables, setVariables] = useState<string>('{}');
+  const [variables, setVariables] = useState<string>('{"id": "2"}');
   const [validationErrors, setValidationErrors] = useState<object>({});
   const editorRef = useRef(null);
 
@@ -341,4 +355,4 @@ const GraphQLPlayground = () => {
   );
 };
 
-export default GraphQLPlayground;
+export default withAuth(GraphQLPlayground);
