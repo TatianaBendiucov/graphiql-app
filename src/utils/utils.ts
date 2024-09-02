@@ -1,5 +1,7 @@
 import { HttpMethod } from '@/types/routesTypes';
 
+const BASE_URL = 'http://localhost:3000';
+
 export const encodeBase64 = (input: string): string => {
   return Buffer.from(input, 'utf-8').toString('base64');
 };
@@ -18,7 +20,7 @@ export const buildGraphQLUrl = ({
   const encodedEndpoint = encodeBase64(endpoint);
   const encodedBody = encodeBase64(body);
 
-  let url = `http://localhost:3000/GRAPHQL/${encodedEndpoint}/${encodedBody}`;
+  let url = `${BASE_URL}/GRAPHQL/${encodedEndpoint}/${encodedBody}`;
 
   if (headers) {
     const headerParams = headers
@@ -43,6 +45,7 @@ interface BuildRestfulApiUrlParams {
   body: string | null;
   headers: { key: string; value: string }[] | null;
 }
+
 export const buildRestfulApiUrl = ({
   method,
   endpoint,
@@ -51,7 +54,7 @@ export const buildRestfulApiUrl = ({
 }: BuildRestfulApiUrlParams): string => {
   const encodedEndpoint = encodeBase64(endpoint);
 
-  let url = `http://localhost:3000/${method}/${encodedEndpoint}`;
+  let url = `${BASE_URL}/${method}/${encodedEndpoint}`;
   if (body) {
     const encodedBody = encodeBase64(body);
     url += `/${encodedBody}`;
