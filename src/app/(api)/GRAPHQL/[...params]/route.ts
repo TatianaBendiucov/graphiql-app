@@ -2,6 +2,11 @@ import { Params } from '@/types/routesTypes';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request, { params }: { params: Params }) {
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const [endpointEncoded, bodyEncoded] = params.params;
 
   if (!endpointEncoded) {
@@ -15,10 +20,8 @@ export async function GET(req: Request, { params }: { params: Params }) {
 
   try {
     const endpoint = Buffer.from(endpointEncoded, 'base64').toString('utf-8');
-    console.log(endpoint);
     const body = Buffer.from(bodyEncoded, 'base64').toString('utf-8');
 
-    console.log(body);
     const url = new URL(req.url);
     const headers: Record<string, string> = {};
     url.searchParams.forEach((value, key) => {
@@ -35,7 +38,6 @@ export async function GET(req: Request, { params }: { params: Params }) {
     });
 
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
     return NextResponse.json(jsonResponse, { status: response.status });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

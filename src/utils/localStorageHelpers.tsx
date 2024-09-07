@@ -14,35 +14,49 @@ export interface RequestHistoryItem {
 
 const LOCAL_STORAGE_KEY = 'requestHistory';
 
-export const saveRequestToLocalStorage = (request: RequestHistoryItem) => {
+export const saveRequestToLocalStorage = (
+  currentUser: string,
+  request: RequestHistoryItem,
+) => {
   const history = JSON.parse(
-    localStorage.getItem(LOCAL_STORAGE_KEY) || '[]',
-  ) as RequestHistoryItem[];
-  history.push(request);
-  localStorage.setItem(
-    LOCAL_STORAGE_KEY,
-    JSON.stringify(history.sort((a, b) => b.timestamp - a.timestamp)),
+    localStorage.getItem(LOCAL_STORAGE_KEY) || '{}',
+  ) as Record<string, RequestHistoryItem[]>;
+
+  const userHistory = history[currentUser] || [];
+  userHistory.push(request);
+
+  history[currentUser] = userHistory.sort(
+    (a: RequestHistoryItem, b: RequestHistoryItem) => b.timestamp - a.timestamp,
   );
+
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(history));
 };
 
-export const getRequestHistoryFromLocalStorage = (): RequestHistoryItem[] => {
-  return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]');
+export const getRequestHistoryFromLocalStorage = (
+  currentUser: string,
+): RequestHistoryItem[] => {
+  const history = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]');
+
+  return history[currentUser] || [];
 };
 
-export const clearRequestHistory = () => {
-  localStorage.removeItem(LOCAL_STORAGE_KEY);
+export const clearRequestHistory = (currentUser: string) => {
+  const allHistory = JSON.parse(
+    localStorage.getItem(LOCAL_STORAGE_KEY) || '{}',
+  );
+  delete allHistory[currentUser];
+
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allHistory));
 };
 
 export const getRequestById = (
-  uuid: string,
+  currentUser: string,
+  requestId: string,
 ): RequestHistoryItem | undefined => {
-  const storedData = localStorage.getItem('requestHistory');
+  const allHistory = JSON.parse(
+    localStorage.getItem(LOCAL_STORAGE_KEY) || '{}',
+  );
+  const userHistory = allHistory[currentUser] || [];
 
-  if (storedData) {
-    const requestHistory: RequestHistoryItem[] = JSON.parse(storedData);
-
-    return requestHistory.find((item) => item.id === uuid);
-  }
-
-  return undefined;
+  return userHistory.find((item: RequestHistoryItem) => item.id === requestId);
 };

@@ -2,6 +2,11 @@ import { Params } from '@/types/routesTypes';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request, { params }: { params: Params }) {
+  const authHeader = request.headers.get('Authorization');
+  if (!authHeader) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const encodedUrl = params.params[0];
   const encodedBody = params.params[1] || null;
   const decodedUrl = Buffer.from(encodedUrl, 'base64').toString('utf-8');
@@ -11,7 +16,6 @@ export async function GET(request: Request, { params }: { params: Params }) {
   const headers: Record<string, string> = Object.fromEntries(
     new URLSearchParams(request.url.split('?')[1]),
   );
-  console.log(body);
 
   try {
     const response = await fetch(decodedUrl, {

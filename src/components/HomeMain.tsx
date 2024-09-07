@@ -14,7 +14,7 @@ import ButtonBase from './Button';
 
 const HomeMain: React.FC = () => {
   const { currentUser } = useAuth();
-  console.log(currentUser);
+
   return (
     <Container maxWidth="md">
       {currentUser ? (

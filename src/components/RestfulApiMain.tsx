@@ -30,6 +30,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSearchParams } from 'next/navigation';
 import ButtonBase from './Button';
 import withAuth from '@/utils/withAuth';
+import useAuth from '@/hooks/useAuth';
 
 const validationErrorsInit = {
   endpoint: '',
@@ -40,6 +41,8 @@ const validationErrorsInit = {
 
 const RestfulApiPlayground = () => {
   const { t } = useTranslation();
+  const currentUser = useAuth().currentUser!;
+  const loading = useAuth().loading;
   const [endpoint, setEndpoint] = useState<string>('');
   const [method, setMethod] = useState<HttpMethod>(HttpMethod.GET);
   const [body, setBody] = useState<string>('');
@@ -68,7 +71,6 @@ const RestfulApiPlayground = () => {
       setValidationErrors({ ...validationErrorsInit });
       return true;
     } catch (err) {
-      console.log(err);
       if (err instanceof Yup.ValidationError) {
         const errors: { [key: string]: string } = {};
         err.inner.forEach((error) => {
@@ -116,6 +118,8 @@ const RestfulApiPlayground = () => {
         .replace(/\\n/g, '')
         .replace(/\s+/g, ' ');
 
+      const token = await currentUser.getIdToken();
+
       const url = buildRestfulApiUrl({
         method,
         endpoint,
@@ -127,6 +131,7 @@ const RestfulApiPlayground = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -148,7 +153,7 @@ const RestfulApiPlayground = () => {
         body,
       };
 
-      saveRequestToLocalStorage(request);
+      saveRequestToLocalStorage(currentUser.uid, request);
     } catch (error) {
       setResponse('Error: ' + error.message);
     }
@@ -188,16 +193,18 @@ const RestfulApiPlayground = () => {
   };
 
   useEffect(() => {
-    const uuid = searchParams.get('id');
-    if (uuid) {
-      const savedRequest = getRequestById(uuid);
-      if (savedRequest) {
-        setEndpoint(savedRequest?.url || '');
-        setHeaders(savedRequest?.headers || []);
-        setBody(savedRequest.body || '');
+    if (!loading && currentUser) {
+      const uuid = searchParams.get('id');
+      if (uuid) {
+        const savedRequest = getRequestById(currentUser.uid, uuid);
+        if (savedRequest) {
+          setEndpoint(savedRequest?.url || '');
+          setHeaders(savedRequest?.headers || []);
+          setBody(savedRequest.body || '');
+        }
       }
     }
-  }, [searchParams]);
+  }, [searchParams, currentUser, loading]);
 
   return (
     <Box sx={{ p: 3 }}>

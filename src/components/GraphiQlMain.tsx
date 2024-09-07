@@ -30,8 +30,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSearchParams } from 'next/navigation';
 import ButtonBase from './Button';
 import withAuth from '../utils/withAuth';
+import useAuth from '@/hooks/useAuth';
 
 const GraphQLPlayground = () => {
+  const currentUser = useAuth().currentUser!;
+  const loading = useAuth().loading;
   const searchParams = useSearchParams();
   const { t } = useTranslation();
   const [endpoint, setEndpoint] = useState<string>(
@@ -86,8 +89,52 @@ const GraphQLPlayground = () => {
     }
   };
 
+  const handleSdlQuery = async () => {
+    const isValid = await validate();
+    if (!isValid) return;
+
+    const bodyObject: Record<string, string | object> = {};
+    const token = await currentUser.getIdToken();
+
+    bodyObject.query = query;
+    let variablesOb: object | null;
+    try {
+      variablesOb = JSON.parse(variables);
+    } catch (e) {
+      variablesOb = null;
+    }
+    if (variablesOb) {
+      bodyObject.variables = variablesOb;
+    }
+
+    const body = JSON.stringify(bodyObject)
+      .replace(/\\n/g, '')
+      .replace(/\s+/g, ' ');
+
+    const sdlResponse = await fetch(
+      buildGraphQLUrl({
+        endpoint: sdlEndpoint,
+        body: body,
+        headers,
+      }),
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (sdlResponse.ok) {
+      const jsonSdlResponse = await sdlResponse.json();
+      setSdlResponse(JSON.stringify(jsonSdlResponse, null, 2));
+    }
+  };
+
   const handleRunQuery = async () => {
     const isValid = await validate();
+    const token = await currentUser.getIdToken();
     if (!isValid) return;
 
     try {
@@ -109,35 +156,16 @@ const GraphQLPlayground = () => {
         .replace(/\s+/g, ' ');
 
       const url = buildGraphQLUrl({ endpoint, body, headers });
-
       const res = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
       });
 
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
-      }
-
-      const sdlResponse = await fetch(
-        buildGraphQLUrl({
-          endpoint: sdlEndpoint,
-          body: body,
-          headers,
-        }),
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-
-      if (sdlResponse.ok) {
-        const jsonSdlResponse = await sdlResponse.json();
-        setSdlResponse(JSON.stringify(jsonSdlResponse, null, 2));
       }
 
       const jsonResponse = await res.json();
@@ -156,7 +184,7 @@ const GraphQLPlayground = () => {
         sdl: sdlEndpoint,
       };
 
-      saveRequestToLocalStorage(requestForHistory);
+      saveRequestToLocalStorage(currentUser.uid, requestForHistory);
     } catch (error) {
       setResponse('Error: ' + error.message);
     }
@@ -192,19 +220,21 @@ const GraphQLPlayground = () => {
   };
 
   useEffect(() => {
-    const uuid = searchParams.get('id');
-    if (uuid) {
-      const savedRequest = getRequestById(uuid);
-      console.log(savedRequest);
-      if (savedRequest) {
-        setEndpoint(savedRequest.url || '');
-        setSdlEndpoint(savedRequest.sdl || '');
-        setHeaders(savedRequest.headers || []);
-        setVariables(savedRequest.variables || '{}');
-        setQuery(savedRequest.body || '');
+    if (!loading && currentUser) {
+      const uuid = searchParams.get('id');
+      if (uuid) {
+        const savedRequest = getRequestById(currentUser.uid, uuid);
+
+        if (savedRequest) {
+          setEndpoint(savedRequest.url || '');
+          setSdlEndpoint(savedRequest.sdl || '');
+          setHeaders(savedRequest.headers || []);
+          setVariables(savedRequest.variables || '{}');
+          setQuery(savedRequest.body || '');
+        }
       }
     }
-  }, [searchParams]);
+  }, [searchParams, currentUser, loading]);
 
   return (
     <Box sx={{ p: 3 }}>
@@ -233,6 +263,14 @@ const GraphQLPlayground = () => {
             error={!!validationErrors.sdlEndpoint}
             helperText={validationErrors.sdlEndpoint}
           />
+          <ButtonBase
+            variant="contained"
+            color="primary"
+            handleClick={handleSdlQuery}
+            fullWidth
+          >
+            Sdl Run
+          </ButtonBase>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h6">Headers</Typography>
