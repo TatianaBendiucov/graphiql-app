@@ -62,5 +62,6 @@
   "run_query": "Run Query",
   "sdl_doc": "SDL Documentation",
   "private": "This route is private",
+  "success": "Success",
   "some": "some"
 }

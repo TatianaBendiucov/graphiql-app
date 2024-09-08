@@ -47,6 +47,8 @@ const GraphQLPlayground = () => {
   const loading = useAuth().loading;
   const searchParams = useSearchParams();
   const { t } = useTranslation();
+  const [isLoadingSDL, setIsLoadingSDL] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [endpoint, setEndpoint] = useState<string>(
     'https://rickandmortyapi.com/graphql',
   );
@@ -105,6 +107,8 @@ const GraphQLPlayground = () => {
     const isValid = await validate();
     if (!isValid) return;
 
+    setIsLoadingSDL(true);
+
     const bodyObject: Record<string, string | object> = {};
     const token = await currentUser.getIdToken();
 
@@ -123,24 +127,33 @@ const GraphQLPlayground = () => {
       .replace(/\\n/g, '')
       .replace(/\s+/g, ' ');
 
-    const sdlResponse = await fetch(
-      buildGraphQLUrl({
-        endpoint: sdlEndpoint,
-        body: body,
-        headers,
-      }),
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+    try {
+      const sdlResponse = await fetch(
+        buildGraphQLUrl({
+          endpoint: sdlEndpoint,
+          body: body,
+          headers,
+        }),
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
         },
-      },
-    );
+      );
 
-    if (sdlResponse.ok) {
-      const jsonSdlResponse = await sdlResponse.json();
-      setSdlResponse(JSON.stringify(jsonSdlResponse, null, 2));
+      if (sdlResponse.ok) {
+        const jsonSdlResponse = await sdlResponse.json();
+        setSdlResponse(JSON.stringify(jsonSdlResponse, null, 2));
+        showToast('success', t('success'));
+      } else {
+        showToast('error', t('error'));
+      }
+    } catch (e) {
+      showToast('error', `${t('error')} ${e}`);
+    } finally {
+      setIsLoadingSDL(false);
     }
   };
 
@@ -148,6 +161,8 @@ const GraphQLPlayground = () => {
     const isValid = await validate();
     const token = await currentUser.getIdToken();
     if (!isValid) return;
+
+    setIsLoading(true);
 
     try {
       const bodyObject: Record<string, string | object> = {};
@@ -178,6 +193,8 @@ const GraphQLPlayground = () => {
 
       if (!res.ok) {
         showToast('error', `${t('http_error_status')} ${res.status}`);
+      } else {
+        showToast('success', t('success'));
       }
 
       const jsonResponse = await res.json();
@@ -199,6 +216,8 @@ const GraphQLPlayground = () => {
       saveRequestToLocalStorage(currentUser.uid, requestForHistory);
     } catch (error) {
       setResponse(`${t('error')} ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -281,6 +300,7 @@ const GraphQLPlayground = () => {
               color="primary"
               handleClick={handleSdlQuery}
               fullWidth
+              disabled={isLoadingSDL}
             >
               {t('sdl_run')}
             </ButtonBase>
@@ -383,6 +403,7 @@ const GraphQLPlayground = () => {
             color="primary"
             handleClick={handleRunQuery}
             fullWidth
+            disabled={isLoading}
           >
             {t('run_query')}
           </ButtonBase>

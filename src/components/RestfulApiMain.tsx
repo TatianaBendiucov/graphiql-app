@@ -42,6 +42,7 @@ const validationErrorsInit = {
 
 const RestfulApiPlayground = () => {
   const { t } = useTranslation();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const currentUser = useAuth().currentUser!;
   const loading = useAuth().loading;
   const [endpoint, setEndpoint] = useState<string>('');
@@ -102,6 +103,8 @@ const RestfulApiPlayground = () => {
 
     if (!isValid) return;
 
+    setIsLoading(true);
+
     try {
       let parsedVariables: Record<string, string> | null = null;
       try {
@@ -138,6 +141,8 @@ const RestfulApiPlayground = () => {
 
       if (!res.ok) {
         showToast('error', `${t('http_error_status')} ${res.status}`);
+      } else {
+        showToast('success', t('success'));
       }
 
       const jsonResponse = await res.json();
@@ -157,6 +162,8 @@ const RestfulApiPlayground = () => {
       saveRequestToLocalStorage(currentUser.uid, request);
     } catch (error) {
       setResponse(`${t('error')} ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -326,6 +333,7 @@ const RestfulApiPlayground = () => {
             color="primary"
             handleClick={handleSend}
             fullWidth
+            disabled={isLoading}
           >
             {t('inputs.send')}
           </ButtonBase>

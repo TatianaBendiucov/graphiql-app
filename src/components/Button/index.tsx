@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import NextLink from 'next/link';
 import { ReactNode } from 'react';
 
@@ -18,6 +18,7 @@ interface ButtonProps {
     | 'warning';
   fullWidth?: boolean;
   type?: 'button' | 'submit';
+  disabled?: boolean;
 }
 
 interface Props {
@@ -35,6 +36,7 @@ const ButtonBase = ({
   color = 'primary',
   type = 'button',
   fullWidth = false,
+  disabled = false,
 }: ButtonProps) => {
   const props: Props = {};
 
@@ -54,8 +56,19 @@ const ButtonBase = ({
       onClick={handleClick}
       fullWidth={fullWidth}
       type={type}
+      disabled={disabled}
       {...props}
     >
+      {disabled ? (
+        <CircularProgress
+          color="inherit"
+          size={20}
+          sx={{ marginRight: '5px' }}
+        />
+      ) : (
+        ''
+      )}
+
       {children}
     </Button>
   );
