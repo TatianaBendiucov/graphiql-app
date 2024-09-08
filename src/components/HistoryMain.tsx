@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'; // Import useEffect and useState
 import ButtonBase from '@/components/Button';
-import { Box, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import {
   clearRequestHistory,
   getRequestHistoryFromLocalStorage,
@@ -11,6 +11,7 @@ import {
 import withAuth from '@/utils/withAuth';
 import useAuth from '@/hooks/useAuth';
 import { useTranslation } from './i18n/client';
+import LoaderBase from './LoaderBase';
 
 const HistoryMain = () => {
   const { t } = useTranslation();
@@ -25,15 +26,17 @@ const HistoryMain = () => {
   }, [currentUser]);
 
   if (loading) {
-    return <Typography variant="body1">{t('loading')}...</Typography>;
+    return <LoaderBase />;
   }
 
   if (!currentUser) {
     return (
-      <Box mt={2}>
+      <Box>
         <Typography variant="body1">{t('empty_history')}</Typography>
-        <ButtonBase href="/restful">{t('client_restful')}</ButtonBase>
-        <ButtonBase href="/graphiql">{t('client_graphiql')}</ButtonBase>
+        <Stack direction={'row'} spacing={1}>
+          <ButtonBase href="/restful">{t('client_restful')}</ButtonBase>
+          <ButtonBase href="/graphiql">{t('client_graphiql')}</ButtonBase>
+        </Stack>
       </Box>
     );
   }
@@ -50,10 +53,13 @@ const HistoryMain = () => {
       </Typography>
 
       {history.length === 0 ? (
-        <Box mt={2}>
+        <Box>
           <Typography variant="body1">{t('empty_history')}</Typography>
-          <ButtonBase href="/restful">{t('client_restful')}</ButtonBase>
-          <ButtonBase href="/graphiql">{t('client_graphiql')}</ButtonBase>
+
+          <Stack direction={'row'} spacing={1}>
+            <ButtonBase href="/restful">{t('client_restful')}</ButtonBase>
+            <ButtonBase href="/graphiql">{t('client_graphiql')}</ButtonBase>
+          </Stack>
         </Box>
       ) : (
         <Box>

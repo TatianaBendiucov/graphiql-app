@@ -249,41 +249,44 @@ const GraphQLPlayground = () => {
   }, [searchParams, currentUser, loading]);
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
       <Typography variant="h4" gutterBottom>
         {t('title_graphiql')}
       </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label={t('inputs.endpoint')}
-            value={endpoint}
-            onChange={(e) => handleEndpointChange(e.target.value)}
-            variant="outlined"
-            error={!!validationErrors?.endpoint}
-            helperText={validationErrors?.endpoint}
-          />
+      <Grid spacing={2}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label={t('inputs.endpoint')}
+              value={endpoint}
+              onChange={(e) => handleEndpointChange(e.target.value)}
+              variant="outlined"
+              error={!!validationErrors?.endpoint}
+              helperText={validationErrors?.endpoint}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label={t('inputs.sdl_endpoint')}
+              value={sdlEndpoint}
+              onChange={(e) => setSdlEndpoint(e.target.value)}
+              variant="outlined"
+              error={!!validationErrors?.sdlEndpoint}
+              helperText={validationErrors?.sdlEndpoint}
+            />
+            <ButtonBase
+              variant="contained"
+              color="primary"
+              handleClick={handleSdlQuery}
+              fullWidth
+            >
+              {t('sdl_run')}
+            </ButtonBase>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label={t('inputs.sdl_endpoint')}
-            value={sdlEndpoint}
-            onChange={(e) => setSdlEndpoint(e.target.value)}
-            variant="outlined"
-            error={!!validationErrors?.sdlEndpoint}
-            helperText={validationErrors?.sdlEndpoint}
-          />
-          <ButtonBase
-            variant="contained"
-            color="primary"
-            handleClick={handleSdlQuery}
-            fullWidth
-          >
-            {t('sdl_run')}
-          </ButtonBase>
-        </Grid>
+
         <Grid item xs={12}>
           <Typography variant="h6">{t('inputs.headers')}</Typography>
           <IconButton onClick={addHeader}>

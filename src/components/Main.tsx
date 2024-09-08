@@ -6,6 +6,7 @@ import { useTranslation } from './i18n/client';
 import { setLocale } from 'yup';
 import Image from 'next/image';
 import ButtonBase from './Button';
+import LoaderBase from './LoaderBase';
 
 interface MainProps {
   children: React.ReactNode;
@@ -26,7 +27,7 @@ const Main: React.FC<MainProps> = ({ children }) => {
     },
   });
 
-  if (loading) return <>{t('loading')}...</>;
+  if (loading) return <LoaderBase />;
 
   return (
     <>

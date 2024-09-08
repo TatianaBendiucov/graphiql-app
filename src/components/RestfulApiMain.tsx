@@ -208,25 +208,28 @@ const RestfulApiPlayground = () => {
   }, [searchParams, currentUser, loading]);
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
       <Typography variant="h4" gutterBottom>
         {t('restful_title')}
       </Typography>
-      <Grid container spacing={2} xs={12}>
-        <Grid item xs={2}>
-          <HttpMethodSelector method={method} setMethod={setMethod} />
+      <Grid spacing={2} xs={12}>
+        <Grid container spacing={2} xs={12}>
+          <Grid item xs={2}>
+            <HttpMethodSelector method={method} setMethod={setMethod} />
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              fullWidth
+              label={t('inputs.endpoint')}
+              value={endpoint}
+              onChange={(e) => handleEndpointChange(e.target.value)}
+              variant="outlined"
+              error={!!validationErrors?.endpoint}
+              helperText={validationErrors?.endpoint}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={10}>
-          <TextField
-            fullWidth
-            label={t('inputs.endpoint')}
-            value={endpoint}
-            onChange={(e) => handleEndpointChange(e.target.value)}
-            variant="outlined"
-            error={!!validationErrors?.endpoint}
-            helperText={validationErrors?.endpoint}
-          />
-        </Grid>
+
         <Grid item xs={12}>
           <Typography variant="h6">{t('inputs.headers')}</Typography>
           <IconButton onClick={addHeader}>
