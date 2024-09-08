@@ -5,13 +5,13 @@ const withAuth = <P extends object>(
   Component: React.ComponentType<P>,
 ): FC<P> => {
   return (props: P) => {
-    const { loading, currentUser } = useAuth();
+    const { loading, currentUser, t } = useAuth();
 
     if (loading) {
-      return <div>Loading...</div>;
+      return <div>{t('loading')}...</div>;
     }
 
-    if (!currentUser) return <p>This route is private</p>;
+    if (!currentUser) return <p>{t('private')}</p>;
 
     return <Component {...props} />;
   };

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
+import { useTranslation } from '@/components/i18n/client';
 
 const useAuth = () => {
+  const { t } = useTranslation();
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -21,7 +23,7 @@ const useAuth = () => {
     return () => unsubscribe();
   }, [currentUser]);
 
-  return { currentUser, loading };
+  return { currentUser, loading, t };
 };
 
 export default useAuth;

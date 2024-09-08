@@ -324,7 +324,7 @@ const RestfulApiPlayground = () => {
             handleClick={handleSend}
             fullWidth
           >
-            {t('send')}
+            {t('inputs.send')}
           </ButtonBase>
         </Grid>
 

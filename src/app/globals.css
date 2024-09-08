@@ -19,6 +19,7 @@ body {
 }
 
 main {
+  padding-top: 60px;
   min-height: calc(100% - 151px);
 }
 

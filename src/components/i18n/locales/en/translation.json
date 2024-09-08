@@ -61,5 +61,6 @@
   "variables_editor": "Variables Editor",
   "run_query": "Run Query",
   "sdl_doc": "SDL Documentation",
+  "private": "This route is private",
   "some": "some"
 }

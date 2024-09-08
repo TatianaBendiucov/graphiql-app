@@ -26,7 +26,13 @@ const Header: React.FC = () => {
         alignItems={'center'}
       >
         <ButtonBase href={'/'} color={'inherit'} variant="text">
-          <Image src="/logo-project.png" alt="Logo" width={130} height={30} />
+          <Image
+            src="/logo-project.png"
+            alt="Logo"
+            width={130}
+            height={40}
+            priority={true}
+          />
         </ButtonBase>
 
         <Box>
