@@ -31,6 +31,16 @@ import { useSearchParams } from 'next/navigation';
 import ButtonBase from './Button';
 import withAuth from '../utils/withAuth';
 import useAuth from '@/hooks/useAuth';
+import { showToast } from './ShowToast';
+
+const validationErrorsInit = {
+  endpoint: '',
+  sdlEndpoint: '',
+  headers: [],
+  variables: '',
+  query: '',
+  body: '',
+};
 
 const GraphQLPlayground = () => {
   const currentUser = useAuth().currentUser!;
@@ -58,7 +68,9 @@ const GraphQLPlayground = () => {
   const [sdlResponse, setSdlResponse] = useState<string | null>(null);
   const [headers, setHeaders] = useState<{ key: string; value: string }[]>([]);
   const [variables, setVariables] = useState<string>('{"id": "2"}');
-  const [validationErrors, setValidationErrors] = useState<object>({});
+  const [validationErrors, setValidationErrors] = useState({
+    ...validationErrorsInit,
+  });
   const editorRef = useRef(null);
 
   const validate = async () => {
@@ -165,7 +177,7 @@ const GraphQLPlayground = () => {
       });
 
       if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+        showToast('error', `${t('http_error_status')} ${res.status}`);
       }
 
       const jsonResponse = await res.json();
@@ -186,7 +198,7 @@ const GraphQLPlayground = () => {
 
       saveRequestToLocalStorage(currentUser.uid, requestForHistory);
     } catch (error) {
-      setResponse('Error: ' + error.message);
+      setResponse(`${t('error')} ${error.message}`);
     }
   };
 
@@ -239,29 +251,29 @@ const GraphQLPlayground = () => {
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
-        GraphQL Playground
+        {t('title_graphiql')}
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField
             fullWidth
-            label="Endpoint (URL)"
+            label={t('inputs.endpoint')}
             value={endpoint}
             onChange={(e) => handleEndpointChange(e.target.value)}
             variant="outlined"
-            error={!!validationErrors.endpoint}
-            helperText={validationErrors.endpoint}
+            error={!!validationErrors?.endpoint}
+            helperText={validationErrors?.endpoint}
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
             fullWidth
-            label="SDL Endpoint (URL)"
+            label={t('inputs.sdl_endpoint')}
             value={sdlEndpoint}
             onChange={(e) => setSdlEndpoint(e.target.value)}
             variant="outlined"
-            error={!!validationErrors.sdlEndpoint}
-            helperText={validationErrors.sdlEndpoint}
+            error={!!validationErrors?.sdlEndpoint}
+            helperText={validationErrors?.sdlEndpoint}
           />
           <ButtonBase
             variant="contained"
@@ -269,61 +281,65 @@ const GraphQLPlayground = () => {
             handleClick={handleSdlQuery}
             fullWidth
           >
-            Sdl Run
+            {t('sdl_run')}
           </ButtonBase>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h6">Headers</Typography>
+          <Typography variant="h6">{t('inputs.headers')}</Typography>
           <IconButton onClick={addHeader}>
             <AddCircleOutline color="primary" />
           </IconButton>
-          {headers.map((header, index) => (
-            <Grid container spacing={2} key={index}>
-              <Grid item xs={5}>
-                <TextField
-                  fullWidth
-                  label={`Header Key ${index + 1}`}
-                  value={header.key}
-                  onChange={(e) =>
-                    handleHeaderChange(index, 'key', e.target.value)
-                  }
-                  variant="outlined"
-                  error={!!validationErrors.headers?.[index]?.key}
-                  helperText={validationErrors.headers?.[index]?.key}
-                />
+          {headers.map((header, index) => {
+            const thisError = validationErrors.headers?.[index];
+
+            return (
+              <Grid container spacing={2} key={index}>
+                <Grid item xs={5}>
+                  <TextField
+                    fullWidth
+                    label={t('inputs.header_key', { index: index + 1 })}
+                    value={header.key}
+                    onChange={(e) =>
+                      handleHeaderChange(index, 'key', e.target.value)
+                    }
+                    variant="outlined"
+                    error={!!thisError?.key}
+                    helperText={thisError?.key}
+                  />
+                </Grid>
+                <Grid item xs={5}>
+                  <TextField
+                    fullWidth
+                    label={t('inputs.header_value', { index: index + 1 })}
+                    value={header.value}
+                    onChange={(e) =>
+                      handleHeaderChange(index, 'value', e.target.value)
+                    }
+                    variant="outlined"
+                    error={!!thisError?.value}
+                    helperText={thisError?.value}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={2}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <IconButton onClick={() => removeHeader(index)}>
+                    <RemoveCircleOutline color="error" />
+                  </IconButton>
+                </Grid>
               </Grid>
-              <Grid item xs={5}>
-                <TextField
-                  fullWidth
-                  label={`Header Value ${index + 1}`}
-                  value={header.value}
-                  onChange={(e) =>
-                    handleHeaderChange(index, 'value', e.target.value)
-                  }
-                  variant="outlined"
-                  error={!!validationErrors.headers?.[index]?.value}
-                  helperText={validationErrors.headers?.[index]?.value}
-                />
-              </Grid>
-              <Grid
-                item
-                xs={2}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <IconButton onClick={() => removeHeader(index)}>
-                  <RemoveCircleOutline color="error" />
-                </IconButton>
-              </Grid>
-            </Grid>
-          ))}
+            );
+          })}
         </Grid>
 
         <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
           <Box sx={{ width: '50%' }}>
             <Typography variant="h6">
-              Query Editor
+              {t('query_editor')}
               <ButtonBase
                 variant="contained"
                 color="secondary"
@@ -341,11 +357,11 @@ const GraphQLPlayground = () => {
               extensions={[graphql()]}
               ref={editorRef}
             />
-            <Typography color="error">{validationErrors.query}</Typography>
+            <Typography color="error">{validationErrors?.query}</Typography>
           </Box>
 
           <Box sx={{ width: '50%' }}>
-            <Typography variant="h6">Variables Editor</Typography>
+            <Typography variant="h6">{t('variables_editor')}</Typography>
             <CodeMirror
               className="editor"
               width="100%"
@@ -365,22 +381,22 @@ const GraphQLPlayground = () => {
             handleClick={handleRunQuery}
             fullWidth
           >
-            Run Query
+            {t('run_query')}
           </ButtonBase>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h6">Response Status</Typography>
+          <Typography variant="h6">{t('response_status')}</Typography>
           <pre>{responseStatus}</pre>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h6">Response</Typography>
+          <Typography variant="h6">{t('response')}</Typography>
           <Paper sx={{ p: 2, maxHeight: 300, overflow: 'auto' }}>
             <pre>{response}</pre>
           </Paper>
         </Grid>
         {sdlResponse ? (
           <Grid item xs={12}>
-            <Typography variant="h6">SDL Documentation</Typography>
+            <Typography variant="h6">{t('sdl_doc')}</Typography>
             <Paper sx={{ p: 2, maxHeight: 300, overflow: 'auto' }}>
               <pre>{sdlResponse}</pre>
             </Paper>

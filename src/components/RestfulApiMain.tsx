@@ -31,6 +31,7 @@ import { useSearchParams } from 'next/navigation';
 import ButtonBase from './Button';
 import withAuth from '@/utils/withAuth';
 import useAuth from '@/hooks/useAuth';
+import { showToast } from './ShowToast';
 
 const validationErrorsInit = {
   endpoint: '',
@@ -106,7 +107,7 @@ const RestfulApiPlayground = () => {
       try {
         parsedVariables = JSON.parse(variables);
       } catch (e) {
-        console.error('Invalid JSON in variables:', e);
+        showToast('error', `${t('invalid_json_variables')} ${e}`);
       }
 
       let processedBody = body;
@@ -136,7 +137,7 @@ const RestfulApiPlayground = () => {
       });
 
       if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+        showToast('error', `${t('http_error_status')} ${res.status}`);
       }
 
       const jsonResponse = await res.json();
@@ -155,7 +156,7 @@ const RestfulApiPlayground = () => {
 
       saveRequestToLocalStorage(currentUser.uid, request);
     } catch (error) {
-      setResponse('Error: ' + error.message);
+      setResponse(`${t('error')} ${error.message}`);
     }
   };
 
@@ -188,7 +189,7 @@ const RestfulApiPlayground = () => {
       const formatted = JSON.stringify(parsed, null, 2);
       setBody(formatted);
     } catch (error) {
-      console.error('Failed to format JSON:', error);
+      showToast('error', `${t('failed_format_json')} ${error}`);
     }
   };
 

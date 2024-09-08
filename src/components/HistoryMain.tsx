@@ -10,11 +10,11 @@ import {
 } from '@/utils/localStorageHelpers';
 import withAuth from '@/utils/withAuth';
 import useAuth from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
+import { useTranslation } from './i18n/client';
 
 const HistoryMain = () => {
+  const { t } = useTranslation();
   const { currentUser, loading } = useAuth();
-  const router = useRouter();
   const [history, setHistory] = useState<RequestHistoryItem[]>([]);
 
   useEffect(() => {
@@ -25,25 +25,18 @@ const HistoryMain = () => {
   }, [currentUser]);
 
   if (loading) {
-    return <Typography variant="body1">Loading...</Typography>;
+    return <Typography variant="body1">{t('loading')}...</Typography>;
   }
 
   if (!currentUser) {
     return (
       <Box mt={2}>
-        <Typography variant="body1">
-          It's empty here. Try those options:
-        </Typography>
-        <ButtonBase href="/restful">RESTful Client</ButtonBase>
-        <ButtonBase href="/graphiql">GraphiQL Client</ButtonBase>
+        <Typography variant="body1">{t('empty_history')}</Typography>
+        <ButtonBase href="/restful">{t('client_restful')}</ButtonBase>
+        <ButtonBase href="/graphiql">{t('client_graphiql')}</ButtonBase>
       </Box>
     );
   }
-
-  const handleNavigation = (item: RequestHistoryItem) => {
-    const url = item.type === 'REST' ? '/restful' : '/graphiql';
-    router.push(`${url}?id=${item.id}`);
-  };
 
   const clearMyHistory = () => {
     clearRequestHistory(currentUser.uid);
@@ -53,24 +46,24 @@ const HistoryMain = () => {
   return (
     <Box p={2}>
       <Typography variant="h4" gutterBottom>
-        Request History
+        {t('request_history')}
       </Typography>
 
       {history.length === 0 ? (
         <Box mt={2}>
-          <Typography variant="body1">
-            It's empty here. Try those options:
-          </Typography>
-          <ButtonBase href="/restful">RESTful Client</ButtonBase>
-          <ButtonBase href="/graphiql">GraphiQL Client</ButtonBase>
+          <Typography variant="body1">{t('empty_history')}</Typography>
+          <ButtonBase href="/restful">{t('client_restful')}</ButtonBase>
+          <ButtonBase href="/graphiql">{t('client_graphiql')}</ButtonBase>
         </Box>
       ) : (
         <Box>
           {history.map((item) => (
             <Box key={item.id} mb={2}>
               <Typography variant="body1">
-                <ButtonBase handleClick={() => handleNavigation(item)}>
-                  {item.type} Request -{' '}
+                <ButtonBase
+                  href={`/${item.type === 'REST' ? 'restful' : 'graphiql'}?id=${item.id}`}
+                >
+                  {item.type} {t('request')} -{' '}
                   {new Date(item.timestamp).toLocaleString()}
                 </ButtonBase>
               </Typography>
@@ -81,7 +74,7 @@ const HistoryMain = () => {
             variant="outlined"
             color="secondary"
           >
-            Clear History
+            {t('clear_history')}
           </ButtonBase>
         </Box>
       )}

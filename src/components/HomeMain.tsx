@@ -11,31 +11,36 @@ import {
 } from '@mui/material';
 import useAuth from '@/hooks/useAuth';
 import ButtonBase from './Button';
+import { useTranslation } from './i18n/client';
 
 const HomeMain: React.FC = () => {
+  const { t } = useTranslation();
   const { currentUser } = useAuth();
 
   return (
     <Container maxWidth="md">
       {currentUser ? (
         <>
-          <Box>Welcome back, {currentUser.displayName}!</Box>
+          <Box>
+            {t('welcome_back')}, {currentUser.displayName}!
+          </Box>
           <Box sx={{ my: 4 }}>
             <Typography variant="h3" align="center" gutterBottom>
-              API Tools Hub
+              {t('title_api_hub')}
             </Typography>
             <Typography variant="h6" align="center" paragraph>
-              Select a tool to start exploring the APIs
+              {t('subtitle_api_hub')}
             </Typography>
+
             <Grid container spacing={3} justifyContent="center">
               <Grid item xs={12} sm={4}>
                 <Card>
                   <CardContent>
                     <Typography variant="h5" component="div">
-                      RESTful API Playground
+                      {t('title_restful')}
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      Test and interact with RESTful APIs.
+                      {t('desc_restful')}
                     </Typography>
                     <ButtonBase
                       href="/restful"
@@ -43,7 +48,7 @@ const HomeMain: React.FC = () => {
                       color="primary"
                       fullWidth
                     >
-                      Go to RESTful
+                      {t('go_restful')}
                     </ButtonBase>
                   </CardContent>
                 </Card>
@@ -52,10 +57,10 @@ const HomeMain: React.FC = () => {
                 <Card>
                   <CardContent>
                     <Typography variant="h5" component="div">
-                      GraphiQL Playground
+                      {t('title_graphiql')}
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      Explore and query your GraphQL APIs.
+                      {t('desc_graphiql')}
                     </Typography>
                     <ButtonBase
                       href="/graphiql"
@@ -63,7 +68,7 @@ const HomeMain: React.FC = () => {
                       color="primary"
                       fullWidth
                     >
-                      Go to GraphiQL
+                      {t('go_graphiql')}
                     </ButtonBase>
                   </CardContent>
                 </Card>
@@ -72,10 +77,10 @@ const HomeMain: React.FC = () => {
                 <Card>
                   <CardContent>
                     <Typography variant="h5" component="div">
-                      API History
+                      {t('title_history')}
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      Review and manage your API call history.
+                      {t('desc_history')}
                     </Typography>
                     <ButtonBase
                       href="/history"
@@ -83,7 +88,7 @@ const HomeMain: React.FC = () => {
                       color="primary"
                       fullWidth
                     >
-                      Go to History
+                      {t('go_history')}
                     </ButtonBase>
                   </CardContent>
                 </Card>
@@ -93,7 +98,7 @@ const HomeMain: React.FC = () => {
         </>
       ) : (
         <>
-          <Box>Welcome!</Box>
+          <Box>{t('welcome')}</Box>
           <Grid container spacing={3} justifyContent="center">
             <ButtonBase
               href="/signup"
@@ -101,7 +106,7 @@ const HomeMain: React.FC = () => {
               color="primary"
               fullWidth
             >
-              Sign up
+              {t('sign_up')}
             </ButtonBase>
             <ButtonBase
               href="/signin"
@@ -109,7 +114,7 @@ const HomeMain: React.FC = () => {
               color="primary"
               fullWidth
             >
-              Sign in
+              {t('sign_in')}
             </ButtonBase>
           </Grid>
         </>

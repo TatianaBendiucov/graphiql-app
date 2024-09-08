@@ -21,7 +21,7 @@ const LanguageSwitcher: React.FC = () => {
       value={lng}
       onChange={handleLanguageChange}
       variant="standard"
-      style={{ marginLeft: 10 }}
+      style={{ marginLeft: 10, color: '#fff' }}
     >
       {languages.map((l) => (
         <MenuItem key={l} value={l}>

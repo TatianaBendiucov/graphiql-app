@@ -33,7 +33,7 @@ const SignIn: React.FC = () => {
   const onSubmit: SubmitHandler<SignInFormInputs> = async (data) => {
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
-      showToast('success', 'Login was successfully');
+      showToast('success', t('login_successful'));
       router.push('/');
     } catch (error) {
       showToast('error', error.message);

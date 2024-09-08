@@ -42,7 +42,7 @@ const SignUp: React.FC = () => {
       await updateProfile(user, {
         displayName: data.name,
       });
-      showToast('success', 'Login was successful');
+      showToast('success', t('login_successful'));
       router.push('/');
     } catch (error) {
       showToast('error', error.message);
