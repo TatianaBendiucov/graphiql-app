@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { graphql } from 'cm6-graphql';
-import { json } from '@codemirror/lang-json'; // Import the JSON language
+import { json } from '@codemirror/lang-json';
 import {
   Box,
   Grid,
@@ -32,6 +32,8 @@ import ButtonBase from './Button';
 import withAuth from '../utils/withAuth';
 import useAuth from '@/hooks/useAuth';
 import { showToast } from './ShowToast';
+import IntrospectionDrawer from './IntrospectionDrawer';
+import { SchemaResponse } from '@/types/RequestTypes';
 
 const validationErrorsInit = {
   endpoint: '',
@@ -67,13 +69,17 @@ const GraphQLPlayground = () => {
 `);
   const [response, setResponse] = useState<string | null>(null);
   const [responseStatus, setResponseStatus] = useState<number | null>(null);
-  const [sdlResponse, setSdlResponse] = useState<string | null>(null);
+  const [sdlResponse, setSdlResponse] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
   const [headers, setHeaders] = useState<{ key: string; value: string }[]>([]);
   const [variables, setVariables] = useState<string>('{"id": "2"}');
   const [validationErrors, setValidationErrors] = useState({
     ...validationErrorsInit,
   });
   const editorRef = useRef(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const validate = async () => {
     try {
@@ -144,14 +150,16 @@ const GraphQLPlayground = () => {
       );
 
       if (sdlResponse.ok) {
-        const jsonSdlResponse = await sdlResponse.json();
-        setSdlResponse(JSON.stringify(jsonSdlResponse, null, 2));
+        const jsonSdlResponse = (await sdlResponse.json()) as SchemaResponse;
+        setSdlResponse(jsonSdlResponse.data.__schema);
+        setIsDrawerOpen(true);
+
         showToast('success', t('success'));
       } else {
         showToast('error', t('error'));
       }
     } catch (e) {
-      showToast('error', `${t('error')} ${e}`);
+      showToast('error', `${t('error')} ${e.message}`);
     } finally {
       setIsLoadingSDL(false);
     }
@@ -267,6 +275,10 @@ const GraphQLPlayground = () => {
     }
   }, [searchParams, currentUser, loading]);
 
+  const toggleDrawer = (open: boolean) => {
+    setIsDrawerOpen(open);
+  };
+
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
@@ -286,24 +298,25 @@ const GraphQLPlayground = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label={t('inputs.sdl_endpoint')}
-              value={sdlEndpoint}
-              onChange={(e) => setSdlEndpoint(e.target.value)}
-              variant="outlined"
-              error={!!validationErrors?.sdlEndpoint}
-              helperText={validationErrors?.sdlEndpoint}
-            />
-            <ButtonBase
-              variant="contained"
-              color="primary"
-              handleClick={handleSdlQuery}
-              fullWidth
-              disabled={isLoadingSDL}
-            >
-              {t('sdl_run')}
-            </ButtonBase>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <TextField
+                fullWidth
+                label={t('inputs.sdl_endpoint')}
+                value={sdlEndpoint}
+                onChange={(e) => setSdlEndpoint(e.target.value)}
+                variant="outlined"
+                error={!!validationErrors?.sdlEndpoint}
+                helperText={validationErrors?.sdlEndpoint}
+              />
+              <ButtonBase
+                variant="contained"
+                color="primary"
+                handleClick={handleSdlQuery}
+                disabled={isLoadingSDL}
+              >
+                {t('sdl_run')}
+              </ButtonBase>
+            </Stack>
           </Grid>
         </Grid>
 
@@ -418,16 +431,11 @@ const GraphQLPlayground = () => {
             <pre>{response}</pre>
           </Paper>
         </Grid>
-        {sdlResponse ? (
-          <Grid item xs={12}>
-            <Typography variant="h6">{t('sdl_doc')}</Typography>
-            <Paper sx={{ p: 2, maxHeight: 300, overflow: 'auto' }}>
-              <pre>{sdlResponse}</pre>
-            </Paper>
-          </Grid>
-        ) : (
-          ''
-        )}
+        <IntrospectionDrawer
+          schemaData={sdlResponse}
+          toggleDrawer={toggleDrawer}
+          isDrawerOpen={isDrawerOpen}
+        />
       </Grid>
     </Box>
   );

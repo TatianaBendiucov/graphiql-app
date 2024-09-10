@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField, Box, Typography, Container } from '@mui/material';
@@ -11,6 +11,7 @@ import { useTranslation } from './i18n/client';
 import { showToast } from './ShowToast';
 import { useRouter } from 'next/navigation';
 import ButtonBase from './Button';
+import useAuth from '@/hooks/useAuth';
 
 interface SignUpFormInputs {
   email: string;
@@ -21,6 +22,14 @@ interface SignUpFormInputs {
 const SignUp: React.FC = () => {
   const { t } = useTranslation();
   const router = useRouter();
+
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    if (currentUser) {
+      router.push('/');
+    }
+  }, [currentUser, router]);
 
   const {
     register,
