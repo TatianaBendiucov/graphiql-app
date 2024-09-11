@@ -4,8 +4,8 @@ import React, { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField, Box, Typography, Container } from '@mui/material';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { schema } from '@/utils/validations/SignUpSchema';
 import { useTranslation } from './i18n/client';
 import { showToast } from './ShowToast';
@@ -71,7 +71,12 @@ const SignUp: React.FC = () => {
         <Typography component="h1" variant="h5">
           {t('sign_up')}
         </Typography>
-        <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit(onSubmit)}
+          sx={{ mt: 1 }}
+          data-testid="sign-up-form"
+        >
           <TextField
             variant="outlined"
             margin="normal"
