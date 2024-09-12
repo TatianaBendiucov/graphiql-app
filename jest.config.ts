@@ -16,8 +16,15 @@ const config: Config.InitialOptions = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^src/utils/firebase$': '<rootDir>/__mocks__/firebase.ts',
   },
-  collectCoverageFrom: ['src/**'],
-  modulePathIgnorePatterns: [],
+  collectCoverageFrom: [
+    'src/utils/*.{js,jsx,ts,tsx}',
+    'src/components/**/*.{js,jsx,ts,tsx}',
+    '!src/app/**/*',
+  ],
+  // modulePathIgnorePatterns: [
+  //   "<rootDir>/src/app/\\(api\\)/",
+  //   "<rootDir>/src/app/\\(pages\\)/"
+  // ],
 };
 
 export default config;
