@@ -147,6 +147,18 @@ const HomeMain: React.FC = () => {
         <Card>
           <CardContent>
             <Typography variant="h5" component="div">
+              {t('nikita_name')}
+            </Typography>
+            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+              {t('nikita_desc')}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <Card>
+          <CardContent>
+            <Typography variant="h5" component="div">
               {t('project_name')}
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">

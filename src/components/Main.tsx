@@ -51,6 +51,14 @@ const Main: React.FC<MainProps> = ({ children }) => {
             >
               Tatiana
             </ButtonBase>
+            |
+            <ButtonBase
+              href="https://github.com/nikitos32"
+              target="_blank"
+              variant={'text'}
+            >
+              Nikita
+            </ButtonBase>
           </div>
           <span>2024</span>
           <ButtonBase
