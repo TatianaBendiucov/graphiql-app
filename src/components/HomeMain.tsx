@@ -123,7 +123,7 @@ const HomeMain: React.FC = () => {
         <Card>
           <CardContent>
             <Typography variant="h5" component="div">
-              Oleg
+              {t('oleg_name')}
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
               {t('oleg_desc')}
@@ -135,7 +135,7 @@ const HomeMain: React.FC = () => {
         <Card>
           <CardContent>
             <Typography variant="h5" component="div">
-              Tanya
+              {t('tanya_name')}
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
               {t('tanya_desc')}
@@ -147,7 +147,7 @@ const HomeMain: React.FC = () => {
         <Card>
           <CardContent>
             <Typography variant="h5" component="div">
-              Tanya
+              {t('project_name')}
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
               {t('project_desc')}

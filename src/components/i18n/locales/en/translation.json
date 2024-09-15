@@ -63,8 +63,11 @@
   "sdl_doc": "SDL Documentation",
   "private": "This route is private",
   "success": "Success",
-  "oleg_desc": "Oleg  is a front-end developer with a strong focus on React. During the course, he took the lead on designing the user interface, ensuring the app was user friendly and accessible. Oleg was responsible for implementing complex components, optimizing rendering performance, translations and ensured that the app's state remained consistent and bug-free",
+  "oleg_name": "Oleg",
+  "tanya_name": "Tanya",
+  "oleg_desc": "Oleg is a front-end developer with a strong focus on React. During the course, he took the lead on designing the user interface, ensuring the app was user friendly and accessible. Oleg was responsible for implementing complex components, optimizing rendering performance, translations and ensured that the app's state remained consistent and bug-free",
   "tanya_desc": "Tanya is passionate about managing data flow and state in React applications. They played a key role in integrating external APIs into the final project, managing asynchronous data fetching, writing unit and integration tests using Testing Library to ensure the app's robustness. With a problem-solving mindset, Tanya optimized API calls and ensured smooth data updates across the app.",
   "project_desc": "This project is the final task for the React course RSS App School. It is a light-weight versions of Postman and GrqphiQL combined in one app",
+  "project_name": "Project",
   "some": "some"
 }
