@@ -27,6 +27,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
+    "@netlify/plugin-nextjs": "^5.7.1",
     "@uiw/codemirror-extensions-langs": "^4.23.0",
     "@uiw/react-codemirror": "^4.23.0",
     "accept-language": "^3.0.20",
