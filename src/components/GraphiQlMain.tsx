@@ -44,7 +44,7 @@ const validationErrorsInit = {
   body: '',
 };
 
-const GraphQLPlayground = () => {
+const GraphiQlMain = () => {
   const currentUser = useAuth().currentUser!;
   const loading = useAuth().loading;
   const searchParams = useSearchParams();
@@ -284,7 +284,7 @@ const GraphQLPlayground = () => {
       <Typography variant="h4" gutterBottom>
         {t('title_graphiql')}
       </Typography>
-      <Grid spacing={2}>
+      <Grid container spacing={2}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -298,7 +298,7 @@ const GraphQLPlayground = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <Stack direction="row" spacing={1} alignItems="center">
+            <Stack direction="row" spacing={1} container alignItems="center">
               <TextField
                 fullWidth
                 label={t('inputs.sdl_endpoint')}
@@ -322,7 +322,7 @@ const GraphQLPlayground = () => {
 
         <Grid item xs={12}>
           <Typography variant="h6">{t('inputs.headers')}</Typography>
-          <IconButton onClick={addHeader}>
+          <IconButton onClick={addHeader} data-testid="addHeader-test">
             <AddCircleOutline color="primary" />
           </IconButton>
           {headers.map((header, index) => {
@@ -363,7 +363,10 @@ const GraphQLPlayground = () => {
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <IconButton onClick={() => removeHeader(index)}>
+                  <IconButton
+                    onClick={() => removeHeader(index)}
+                    data-testid="removeHeader-test"
+                  >
                     <RemoveCircleOutline color="error" />
                   </IconButton>
                 </Grid>
@@ -441,4 +444,4 @@ const GraphQLPlayground = () => {
   );
 };
 
-export default withAuth(GraphQLPlayground);
+export default withAuth(GraphiQlMain);

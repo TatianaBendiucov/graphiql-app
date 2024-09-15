@@ -16,7 +16,6 @@ export async function GET(request: Request, { params }: { params: Params }) {
   const headers: Record<string, string> = Object.fromEntries(
     new URLSearchParams(request.url.split('?')[1]),
   );
-
   try {
     const response = await fetch(decodedUrl, {
       method: 'POST',
@@ -24,10 +23,19 @@ export async function GET(request: Request, { params }: { params: Params }) {
         'Content-Type': 'application/json',
         ...headers,
       },
-      body,
+      body: body ? JSON.parse(body) : {},
     });
 
+    // const response = await axios.post(decodedUrl,
+    //   body ? JSON.parse(body) : {},
+    //   {
+    //     headers: {
+    //       'Content-Type': 'application/json', ...headers,
+    //     },
+    //   });
+    // const data = await response;
     const data = await response.json();
+
     return NextResponse.json(data);
   } catch (error) {
     if (error instanceof Error) {

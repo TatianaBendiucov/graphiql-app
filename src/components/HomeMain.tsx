@@ -119,6 +119,42 @@ const HomeMain: React.FC = () => {
           </Grid>
         </>
       )}
+      <Grid item xs={12} sm={4}>
+        <Card>
+          <CardContent>
+            <Typography variant="h5" component="div">
+              Oleg
+            </Typography>
+            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+              {t('oleg_desc')}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <Card>
+          <CardContent>
+            <Typography variant="h5" component="div">
+              Tanya
+            </Typography>
+            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+              {t('tanya_desc')}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <Card>
+          <CardContent>
+            <Typography variant="h5" component="div">
+              Tanya
+            </Typography>
+            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+              {t('project_desc')}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Grid>
     </Container>
   );
 };

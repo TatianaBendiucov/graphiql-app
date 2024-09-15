@@ -7,6 +7,7 @@ jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));
 
+jest.mock('@/hooks/useAuth', () => jest.fn());
 jest.mock('cookies-next', () => ({
   getCookie: jest.fn(),
   setCookie: jest.fn(),

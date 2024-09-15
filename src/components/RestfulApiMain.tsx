@@ -226,6 +226,7 @@ const RestfulApiPlayground = () => {
           </Grid>
           <Grid item xs={10}>
             <TextField
+              data-testid="endpoint-test-id"
               fullWidth
               label={t('inputs.endpoint')}
               value={endpoint}
@@ -246,7 +247,7 @@ const RestfulApiPlayground = () => {
             const thisError = validationErrors.headers?.[index];
 
             return (
-              <Grid container spacing={2} key={index}>
+              <Grid item spacing={2} key={index}>
                 <Grid item xs={5}>
                   <TextField
                     fullWidth
