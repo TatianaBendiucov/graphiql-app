@@ -1,6 +1,6 @@
 import { HttpMethod } from '@/types/routesTypes';
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const encodeBase64 = (input: string): string => {
   return Buffer.from(input, 'utf-8').toString('base64');
