@@ -43,7 +43,18 @@ const validationErrorsInit = {
   query: '',
   body: '',
 };
-
+interface ValidationErrors {
+  endpoint?: string;
+  sdlEndpoint?: string;
+  headers?: string[];
+  variables?: string;
+  query?: string;
+  body?: string;
+}
+type ErrorType = {
+  key?: string;
+  value?: string;
+};
 const GraphiQlMain = () => {
   const currentUser = useAuth().currentUser!;
   const loading = useAuth().loading;
@@ -75,7 +86,7 @@ const GraphiQlMain = () => {
   > | null>(null);
   const [headers, setHeaders] = useState<{ key: string; value: string }[]>([]);
   const [variables, setVariables] = useState<string>('{"id": "2"}');
-  const [validationErrors, setValidationErrors] = useState({
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({
     ...validationErrorsInit,
   });
   const editorRef = useRef(null);
@@ -298,7 +309,7 @@ const GraphiQlMain = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <Stack direction="row" spacing={1} container alignItems="center">
+            <Stack direction="row" spacing={1} alignItems="center">
               <TextField
                 fullWidth
                 label={t('inputs.sdl_endpoint')}
@@ -326,7 +337,9 @@ const GraphiQlMain = () => {
             <AddCircleOutline color="primary" />
           </IconButton>
           {headers.map((header, index) => {
-            const thisError = validationErrors.headers?.[index];
+            const thisError: ErrorType = validationErrors.headers?.[
+              index
+            ] as ErrorType;
 
             return (
               <Grid container spacing={2} key={index}>
@@ -352,8 +365,16 @@ const GraphiQlMain = () => {
                       handleHeaderChange(index, 'value', e.target.value)
                     }
                     variant="outlined"
-                    error={!!thisError?.value}
-                    helperText={thisError?.value}
+                    error={
+                      typeof thisError === 'object' && thisError !== null
+                        ? !!thisError.value
+                        : false
+                    }
+                    helperText={
+                      typeof thisError === 'object' && thisError !== null
+                        ? thisError.value
+                        : ''
+                    }
                   />
                 </Grid>
                 <Grid

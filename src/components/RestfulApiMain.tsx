@@ -40,6 +40,10 @@ const validationErrorsInit = {
   body: '',
 };
 
+type ErrorType = {
+  key?: string;
+  value?: string;
+};
 const RestfulApiPlayground = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -244,7 +248,9 @@ const RestfulApiPlayground = () => {
             <AddCircleOutline color="primary" />
           </IconButton>
           {headers.map((header, index) => {
-            const thisError = validationErrors.headers?.[index];
+            const thisError: ErrorType = validationErrors.headers?.[
+              index
+            ] as ErrorType;
 
             return (
               <Grid item spacing={2} key={index}>

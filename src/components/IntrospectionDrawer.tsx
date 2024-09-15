@@ -11,7 +11,7 @@ import {
 type IntrospectionDrawerProps = {
   isDrawerOpen: boolean;
   toggleDrawer: (open: boolean) => void;
-  schemaData: Record<string, unknown> | undefined;
+  schemaData: Record<string, unknown> | undefined | null;
 };
 
 const IntrospectionDrawer = ({
